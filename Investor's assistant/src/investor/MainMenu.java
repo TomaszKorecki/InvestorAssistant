@@ -98,16 +98,6 @@ public class MainMenu extends Application {
     }
 
 
-//    private BorderPane CreateCompaniesPane() {
-//        BorderPane borderPane = new BorderPane();
-//        Label label = new Label("Spółki");
-//        borderPane.setCenter(label);
-//        return borderPane;
-//    }
-
-//    private TableView CreateCurrenciesTable() {
-//
-//    }
     public static void main(String[] args) {
         launch(args);
     }
