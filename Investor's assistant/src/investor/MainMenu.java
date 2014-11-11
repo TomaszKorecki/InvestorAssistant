@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 import investor.charts.LinearChartManager;
+import investor.network.NetworkManager;
 import investor.views.CompaniesView;
 import investor.views.CurrenciesCorrelationsView;
 import investor.views.CurrenciesView;
@@ -92,6 +93,12 @@ public class MainMenu extends Application {
 
     public static void main(String[] args) {
         launch(args);
+//        System.out.println("Sending connection");
+//         try{
+//             NetworkManager.sendGet();
+//         }catch(Exception e){
+//             System.out.println(e.toString());
+//         }
     }
 
 }
