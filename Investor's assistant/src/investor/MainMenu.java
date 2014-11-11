@@ -13,6 +13,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 import investor.charts.LinearChartManager;
+import investor.views.CompaniesView;
+import investor.views.CurrenciesCorrelationsView;
+import investor.views.CurrenciesView;
+import investor.views.InvestorView;
+import investor.views.MarketIndicisesView;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
@@ -23,8 +28,15 @@ import javafx.scene.chart.XYChart;
 public class MainMenu extends Application {
 
     TabPane tabs;
-    Pane marketIndicesPane;
-    Pane companiesPane;
+//    Pane marketIndicesPane;
+//    Pane companiesPane;
+    
+    MarketIndicisesView marketIndicicesView = new MarketIndicisesView();
+    CompaniesView companiesView = new CompaniesView();
+    CurrenciesView currenciesView = new CurrenciesView();
+    CurrenciesCorrelationsView currenciesCorrelationView = new CurrenciesCorrelationsView();
+    
+    InvestorView[] views = {marketIndicicesView, companiesView, currenciesView, currenciesCorrelationView};
 
     @Override
     public void start(Stage primaryStage) {
@@ -35,11 +47,16 @@ public class MainMenu extends Application {
         BorderPane borderPane = new BorderPane();
 
         borderPane.setTop(tabs);
+        
+        
+//        marketIndicesPane = CreateMarketIndicesPane();
+//        companiesPane = CreateCompaniesPane();
+        
+        for(InvestorView v : views){
+            v.InitView();
+        }
 
-        marketIndicesPane = CreateMarketIndicesPane();
-        companiesPane = CreateCompaniesPane();
-
-        borderPane.setCenter(marketIndicesPane);
+        borderPane.setCenter(marketIndicicesView.getPane());
         //borderPane.setCenter(label);
 
         tabs.getSelectionModel().selectedItemProperty().addListener(
@@ -47,10 +64,13 @@ public class MainMenu extends Application {
                     @Override
                     public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
                         if (t1 == marketIndices) {
-                            borderPane.setCenter(marketIndicesPane);
+                            borderPane.setCenter(marketIndicicesView.getPane());
                         } else if (t1 == companies) {
-                            borderPane.setCenter(companiesPane);
-                        }
+                            borderPane.setCenter(companiesView.getPane());
+                        } else if(t1 == currencies)
+                            borderPane.setCenter(currenciesView.getPane());
+                        else if(t1 == currenciesCorrelations)
+                            borderPane.setCenter(currenciesCorrelationView.getPane());
                     }
                 }
         );
@@ -77,26 +97,13 @@ public class MainMenu extends Application {
         return tabPane;
     }
 
-    private BorderPane CreateMarketIndicesPane() {
-        BorderPane borderPane = new BorderPane();
-        //Label label = new Label("Wskaźniki giełdowe");
 
-        String month[] = {"Jan", "Feb", "Mar", "Apr", "May"};              //przykladowe dane do wykresow
-        int v1[] = {1000, 1070, 1100, 1130, 1200};
-
-        XYChart.Series s = LinearChartManager.createSeries("jeden", month, v1);
-        LineChart chart = LinearChartManager.linear(s);
-
-        borderPane.setCenter(chart);
-        return borderPane;
-    }
-
-    private BorderPane CreateCompaniesPane() {
-        BorderPane borderPane = new BorderPane();
-        Label label = new Label("Spółki");
-        borderPane.setCenter(label);
-        return borderPane;
-    }
+//    private BorderPane CreateCompaniesPane() {
+//        BorderPane borderPane = new BorderPane();
+//        Label label = new Label("Spółki");
+//        borderPane.setCenter(label);
+//        return borderPane;
+//    }
 
 //    private TableView CreateCurrenciesTable() {
 //
