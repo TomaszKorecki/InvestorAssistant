@@ -1,5 +1,6 @@
 package investor;
 
+import com.google.gson.Gson;
 import investor.network.NetworkManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -95,6 +96,11 @@ public class MainMenu extends Application {
         JSONObject json = NetworkManager.readJsonFromUrl("https://graph.facebook.com/19292868552");
         System.out.println(json.toString());
         System.out.println(json.get("id"));
+        
+        Gson gson = new Gson();
+        //usage:
+        //gson.toJson(null)
+        //gson.fromJson
     }
 
 }
