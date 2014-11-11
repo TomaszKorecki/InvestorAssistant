@@ -43,8 +43,11 @@ public class LinearChartManager {
 
         return lineChart;
     }
-
-    public static void addPoint(LineChart<String, Number> lineChart, String date, Number value, boolean removeFirstPoint) {   //dodanie punktu do wykresu
+      
+    /*
+    dodanie punktu do wykresu
+    */
+    public static void addPoint(LineChart<String, Number> lineChart, String date, Number value, boolean removeFirstPoint) {   
         XYChart.Series<String, Number> s = lineChart.getData().get(0);
         
         if (removeFirstPoint) {
@@ -53,5 +56,63 @@ public class LinearChartManager {
         
         s.getData().add(new LineChart.Data<String, Number>(date, value));
     }
-
+    
+    /*
+    tablica stringow dla roznych typow wykresow
+    */
+    public static String[] generateXLabels(int version){
+        String labels[];
+        
+        switch (version){
+            case 1: 
+                     labels = new String[] {"Styczeń", 
+            "Luty", 
+            "Marzec", 
+            "Kwiecień", 
+            "Maj",
+            "Czerwiec",
+            "Lipiec",
+            "Sierpień",
+            "Wrzesień",
+            "Październik",
+            "Listopad",
+            "Grudzień"
+        };
+                     
+            return labels; 
+                 
+            case 2:
+                labels = new String[30];
+                for (int i = 0; i < 30; i++) {
+                    labels[i] = Integer.toString(i+1);
+                }
+                return labels;
+                
+            case 3: 
+                   labels = new String[] {"Poniedziałek", 
+            "Wtorek", 
+            "Środa", 
+            "Czwartek", 
+            "Piątek",
+            "Sobota",
+            "Niedziela"
+        };   
+           return labels; 
+                
+            case 4:
+                labels = new String[24];
+                for (int i = 0; i < 24; i++) {
+                    labels[i] = Integer.toString(i);
+                }
+                return labels;                
+                
+            default : 
+                labels = new String[] {};
+                return labels;   
+            
+        }    
+                           
+    }             
+                           
+                           
 }

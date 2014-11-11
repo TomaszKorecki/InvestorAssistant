@@ -82,9 +82,17 @@ public class MainMenu extends Application {
         //Label label = new Label("Wskaźniki giełdowe");
 
         String month[] = {"Jan", "Feb", "Mar", "Apr", "May"};              //przykladowe dane do wykresow
-        int v1[] = {1000, 1070, 1100, 1130, 1200};
-
-        XYChart.Series s = LinearChartManager.createSeries("jeden", month, v1);
+        int v1[] = {1000, 1070, 1100, 1130, 1200, 1000, 1070, 1100, 1130, 1200, 1000, 1234};
+        
+        
+        /*
+        parametry dla generateXLabels (trzeba wtedy tez dostosowac rozmiar tablicy z wartosciami):
+        1 - miesiace
+        2 - 30 dni
+        3 - dni tygodnia
+        4 - 24 godziny
+        */
+        XYChart.Series s = LinearChartManager.createSeries("jeden", LinearChartManager.generateXLabels(1), v1);
         LineChart chart = LinearChartManager.linear(s);
 
         borderPane.setCenter(chart);
