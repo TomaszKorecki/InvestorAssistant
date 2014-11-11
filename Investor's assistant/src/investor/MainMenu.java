@@ -27,10 +27,7 @@ import javafx.scene.chart.XYChart;
  */
 public class MainMenu extends Application {
 
-    TabPane tabs;
-//    Pane marketIndicesPane;
-//    Pane companiesPane;
-    
+    TabPane tabs;    
     MarketIndicisesView marketIndicicesView = new MarketIndicisesView();
     CompaniesView companiesView = new CompaniesView();
     CurrenciesView currenciesView = new CurrenciesView();
@@ -48,16 +45,11 @@ public class MainMenu extends Application {
 
         borderPane.setTop(tabs);
         
-        
-//        marketIndicesPane = CreateMarketIndicesPane();
-//        companiesPane = CreateCompaniesPane();
-        
         for(InvestorView v : views){
             v.InitView();
         }
 
         borderPane.setCenter(marketIndicicesView.getPane());
-        //borderPane.setCenter(label);
 
         tabs.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
