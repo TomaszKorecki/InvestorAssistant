@@ -1,26 +1,23 @@
 package investor;
 
+import investor.network.NetworkManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
-import javafx.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-
-import investor.charts.LinearChartManager;
-import investor.network.NetworkManager;
+import static investor.network.NetworkManager.readJsonFromUrl;
 import investor.views.CompaniesView;
 import investor.views.CurrenciesCorrelationsView;
 import investor.views.CurrenciesView;
 import investor.views.InvestorView;
 import investor.views.MarketIndicisesView;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
+import java.io.IOException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -28,12 +25,12 @@ import javafx.scene.chart.XYChart;
  */
 public class MainMenu extends Application {
 
-    TabPane tabs;    
+    TabPane tabs;
     MarketIndicisesView marketIndicicesView = new MarketIndicisesView();
     CompaniesView companiesView = new CompaniesView();
     CurrenciesView currenciesView = new CurrenciesView();
     CurrenciesCorrelationsView currenciesCorrelationView = new CurrenciesCorrelationsView();
-    
+
     InvestorView[] views = {marketIndicicesView, companiesView, currenciesView, currenciesCorrelationView};
 
     @Override
@@ -45,8 +42,8 @@ public class MainMenu extends Application {
         BorderPane borderPane = new BorderPane();
 
         borderPane.setTop(tabs);
-        
-        for(InvestorView v : views){
+
+        for (InvestorView v : views) {
             v.InitView();
         }
 
@@ -60,10 +57,11 @@ public class MainMenu extends Application {
                             borderPane.setCenter(marketIndicicesView.getPane());
                         } else if (t1 == companies) {
                             borderPane.setCenter(companiesView.getPane());
-                        } else if(t1 == currencies)
+                        } else if (t1 == currencies) {
                             borderPane.setCenter(currenciesView.getPane());
-                        else if(t1 == currenciesCorrelations)
+                        } else if (t1 == currenciesCorrelations) {
                             borderPane.setCenter(currenciesCorrelationView.getPane());
+                        }
                     }
                 }
         );
@@ -90,15 +88,13 @@ public class MainMenu extends Application {
         return tabPane;
     }
 
+    public static void main(String[] args) throws IOException, JSONException {
+        //launch(args);
+        System.out.println("Sending connection");
 
-    public static void main(String[] args) {
-        launch(args);
-//        System.out.println("Sending connection");
-//         try{
-//             NetworkManager.sendGet();
-//         }catch(Exception e){
-//             System.out.println(e.toString());
-//         }
+        JSONObject json = NetworkManager.readJsonFromUrl("https://graph.facebook.com/19292868552");
+        System.out.println(json.toString());
+        System.out.println(json.get("id"));
     }
 
 }
