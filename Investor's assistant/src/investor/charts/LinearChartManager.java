@@ -1,5 +1,8 @@
 package investor.charts;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
