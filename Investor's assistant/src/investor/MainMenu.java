@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.BorderPane;
-import static investor.network.NetworkManager.readJsonFromUrl;
 import investor.views.CompaniesView;
 import investor.views.CurrenciesCorrelationsView;
 import investor.views.CurrenciesView;
@@ -74,7 +73,7 @@ public class MainMenu extends Application {
         Scene scene = new Scene(borderPane, 800, 450);
         primaryStage.setScene(scene);
 
-        //scene.getStylesheets().add(JavaFXApplication1.class.getResource("login.css").toExternalForm());
+        //scene.getStylesheets().add(MainMenu.class.getResource("login.css").toExternalForm());
         primaryStage.show();
     }
 
@@ -94,16 +93,8 @@ public class MainMenu extends Application {
     }
 
     public static void main(String[] args) throws IOException, JSONException {
-        //launch(args);
+        launch(args);
 
-        Index[] ind = NetworkManager.downloadIndices(DataRange.DAY);
         
-        try {
-            System.out.println(ind[0].getClass() == null);
-            System.out.println(ind[0].getName());
-        } catch (Exception e) {
-            System.out.println("Exception, watch out!");
-            System.out.println(e.getCause());
-        }
     }
 }
