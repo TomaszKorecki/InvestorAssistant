@@ -9,37 +9,66 @@ and open the template in the editor.
 */
 
 
-.root {
-    -fx-background-image: url("background.jpg");
+.chart-title {
+ -fx-font-size: 30px;
+   -fx-font-family: "Courier New";
+   -fx-font-weight: bold;
 }
 
-.label {
+.chart-alternative-row-fill {
+    -fx-fill: transparent;
+    -fx-stroke: transparent;
+    -fx-stroke-width: 0;
+}
+
+.axis {
+  -fx-text-fill: #4682b4;
+}
+
+.chart {
+    -fx-padding: 10px;
+     -fx-background-color: 
+        #52B3CC;
+
+     -fx-text-fill:  white;
+}
+
+.chart-plot-background{
+-fx-padding:0px;
+-fx-font-family: Verdana;
+}
+.chart-content{
+-fx-background-color: linear-gradient(to bottom right, lightblue, #CAEAFF);
+-fx-padding:30px;
+-fx-border-width: 5;
+-fx-border-insets: -5;
+}
+
+.CategoryAxis{
+ -fx-color:black;   
+
+}
+
+.chart-legend{
+   -fx-background-color:white;
+
+}
+
+.axis {
+    -fx-font-size: 16px;
+    -fx-tick-label-fill: black;
+    -fx-font-family: Tahoma;
+    -fx-tick-length: 20;
+    -fx-minor-tick-length: 10;
+}
+
+.chart-series-line {    
+    -fx-stroke-width: 2px;
+  }
+
+.chart-legend { 
+    -fx-background-color: linear-gradient(lightgray, white);
     -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
-    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
-}
-
-#welcome-text {
-   -fx-font-size: 32px;
-   -fx-font-family: "Arial Black";
-   -fx-fill: #818181;
-   -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
-}
-#actiontarget {
-  -fx-fill: FIREBRICK;
-  -fx-font-weight: bold;
-  -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );  
-}
-
-.button {
-    -fx-text-fill: white;
-    -fx-font-family: "Arial Narrow";
-    -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-}
-
-.button:hover {
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-text-fill: #F8F8F8 ;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 }
