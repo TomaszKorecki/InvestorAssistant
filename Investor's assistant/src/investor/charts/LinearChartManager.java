@@ -11,6 +11,10 @@ import javafx.scene.chart.XYChart;
  */
 public class LinearChartManager {
 
+    public static enum Range {
+    DAY, WEEK, MONTH, THREEMONTHS;
+    }
+
     /*
      Tworzenie serii danych, dane jako argumenty
      */
@@ -44,6 +48,26 @@ public class LinearChartManager {
         return lineChart;
     }
 
+            public static BarChart<String, Number> bar(XYChart.Series s) {
+
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("oś X");
+        yAxis.setLabel("oś Y");
+
+        
+        
+        final BarChart<String, Number> barChart
+                = new BarChart<String, Number>(xAxis, yAxis);
+
+        //lineChart.setCreateSymbols(false);
+        barChart.setTitle("Tytuł");
+        barChart.getData().addAll(s);
+
+        return barChart;
+    }
+    
+
     /*
      dodanie punktu do wykresu
      */
@@ -57,65 +81,44 @@ public class LinearChartManager {
         s.getData().add(new LineChart.Data<String, Number>(date, value));
     }
 
-    /*
-     parametry dla generateXLabels (trzeba wtedy tez dostosowac rozmiar tablicy z wartosciami):
-     1 - miesiace
-     2 - 30 dni
-     3 - dni tygodnia
-     4 - 24 godziny
+/*
+     trzeba  tez dostosowac rozmiar tablicy z wartosciami
      */
-    public static String[] generateXLabels(int version) {
+    public static String[] generateXLabels(Range r) {
         String labels[];
-
-        switch (version) {
-            case 1:
-                labels = new String[]{"Styczeń",
-                    "Luty",
-                    "Marzec",
-                    "Kwiecień",
-                    "Maj",
-                    "Czerwiec",
-                    "Lipiec",
-                    "Sierpień",
-                    "Wrzesień",
-                    "Październik",
-                    "Listopad",
-                    "Grudzień"
-                };
-
-                return labels;
-
-            case 2:
-                labels = new String[30];
-                for (int i = 0; i < 30; i++) {
-                    labels[i] = Integer.toString(i + 1);
-                }
-                return labels;
-
-            case 3:
-                labels = new String[]{"Poniedziałek",
-                    "Wtorek",
-                    "Środa",
-                    "Czwartek",
-                    "Piątek",
-                    "Sobota",
-                    "Niedziela"
-                };
-                return labels;
-
-            case 4:
-                labels = new String[24];
-                for (int i = 0; i < 24; i++) {
-                    labels[i] = Integer.toString(i);
-                }
-                return labels;
-
+        int days; 
+        
+        switch (r) {
+            case THREEMONTHS:
+                days = 120;
+                break;
+                
+            case MONTH:
+                days = 30;
+                break;
+                
+            case WEEK:
+                days = 7;
+                break;
+                
             default:
-                labels = new String[]{};
-                return labels;
+                days = 0;
+                break;
 
         }
-
+        
+                labels = new String[days];
+                
+                SimpleDateFormat formatter = new SimpleDateFormat( "dd-MM-YYYY" );
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.DATE, -(days+1));
+                
+                for (int i = 0; i < days; i++){
+                    cal.add(Calendar.DATE, +1);
+                    labels[i] = formatter.format( cal.getTime() );
+                }
+                
+                return labels;
     }
 
 }

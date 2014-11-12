@@ -33,9 +33,9 @@ public class CurrenciesView extends InvestorView {
         //Label label = new Label("Wskaźniki giełdowe");
 
         String month[] = {"Jan", "Feb", "Mar", "Apr", "May"};              //przykladowe dane do wykresow
-        int v1[] = {1000, 1070, 1100, 1130, 1200};
-
-        XYChart.Series s = LinearChartManager.createSeries("jeden", month, v1);
+        int v1[] = {1000, 1070, 1100, 1130, 1200, 500, 900};
+        
+        XYChart.Series s = LinearChartManager.createSeries("jeden", LinearChartManager.generateXLabels(LinearChartManager.Range.WEEK), v1);
         lineChart = LinearChartManager.linear(s);
 
         table = new TableView();
