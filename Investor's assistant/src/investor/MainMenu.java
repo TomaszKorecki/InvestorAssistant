@@ -1,6 +1,8 @@
 package investor;
 
 import com.google.gson.Gson;
+import investor.data.DataRange;
+import investor.data.Index;
 import investor.network.NetworkManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -17,6 +19,8 @@ import investor.views.CurrenciesView;
 import investor.views.InvestorView;
 import investor.views.MarketIndicisesView;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,16 +95,16 @@ public class MainMenu extends Application {
 
     public static void main(String[] args) throws IOException, JSONException {
         //launch(args);
-        System.out.println("Sending connection");
 
-        JSONObject json = NetworkManager.readJsonFromUrl("https://graph.facebook.com/19292868552");
-        System.out.println(json.toString());
-        System.out.println(json.get("id"));
+        Index[] ind = NetworkManager.downloadIndices(DataRange.DAY);
         
-        Gson gson = new Gson();
-        //usage:
-        //gson.toJson(null)
-        //gson.fromJson
+        try {
+            System.out.println(ind[0].getClass() == null);
+            System.out.println(ind[0].getName());
+        } catch (Exception e) {
+            System.out.println("Exception, watch out!");
+            System.out.println(e.getCause());
+        }
     }
 
 }

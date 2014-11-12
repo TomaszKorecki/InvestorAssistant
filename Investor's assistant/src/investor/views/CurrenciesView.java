@@ -7,6 +7,7 @@ package investor.views;
 
 import investor.charts.LinearChartManager;
 import investor.data.Currency;
+import investor.data.DataRange;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableColumn;
@@ -35,7 +36,7 @@ public class CurrenciesView extends InvestorView {
         String month[] = {"Jan", "Feb", "Mar", "Apr", "May"};              //przykladowe dane do wykresow
         int v1[] = {1000, 1070, 1100, 1130, 1200, 500, 900};
         
-        XYChart.Series s = LinearChartManager.createSeries("jeden", LinearChartManager.generateXLabels(LinearChartManager.Range.WEEK), v1);
+        XYChart.Series s = LinearChartManager.createSeries("jeden", LinearChartManager.generateXLabels(DataRange.WEEK), v1);
         lineChart = LinearChartManager.linear(s);
 
         table = new TableView();

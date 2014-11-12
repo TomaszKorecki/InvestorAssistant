@@ -5,6 +5,7 @@
  */
 package investor.data;
 
+
 /**
  *
  * @author Tomasz

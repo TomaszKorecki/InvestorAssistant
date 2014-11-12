@@ -1,5 +1,6 @@
 package investor.charts;
 
+import investor.data.DataRange;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javafx.scene.chart.BarChart;
@@ -13,10 +14,6 @@ import javafx.scene.chart.XYChart;
  * @author mrudnicky
  */
 public class LinearChartManager {
-
-    public static enum Range {
-    DAY, WEEK, MONTH, THREEMONTHS;
-    }
 
     /*
      Tworzenie serii danych, dane jako argumenty
@@ -51,15 +48,13 @@ public class LinearChartManager {
         return lineChart;
     }
 
-            public static BarChart<String, Number> bar(XYChart.Series s) {
+    public static BarChart<String, Number> bar(XYChart.Series s) {
 
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("oś X");
         yAxis.setLabel("oś Y");
 
-        
-        
         final BarChart<String, Number> barChart
                 = new BarChart<String, Number>(xAxis, yAxis);
 
@@ -69,7 +64,7 @@ public class LinearChartManager {
 
         return barChart;
     }
-    
+
 
     /*
      dodanie punktu do wykresu
@@ -84,44 +79,44 @@ public class LinearChartManager {
         s.getData().add(new LineChart.Data<String, Number>(date, value));
     }
 
-/*
+    /*
      trzeba  tez dostosowac rozmiar tablicy z wartosciami
      */
-    public static String[] generateXLabels(Range r) {
+    public static String[] generateXLabels(DataRange r) {
         String labels[];
-        int days; 
-        
+        int days;
+
         switch (r) {
             case THREEMONTHS:
                 days = 120;
                 break;
-                
+
             case MONTH:
                 days = 30;
                 break;
-                
+
             case WEEK:
                 days = 7;
                 break;
-                
+
             default:
                 days = 0;
                 break;
 
         }
-        
-                labels = new String[days];
-                
-                SimpleDateFormat formatter = new SimpleDateFormat( "dd-MM-YYYY" );
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DATE, -(days+1));
-                
-                for (int i = 0; i < days; i++){
-                    cal.add(Calendar.DATE, +1);
-                    labels[i] = formatter.format( cal.getTime() );
-                }
-                
-                return labels;
+
+        labels = new String[days];
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-YYYY");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -(days + 1));
+
+        for (int i = 0; i < days; i++) {
+            cal.add(Calendar.DATE, +1);
+            labels[i] = formatter.format(cal.getTime());
+        }
+
+        return labels;
     }
 
 }
