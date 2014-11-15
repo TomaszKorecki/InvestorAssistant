@@ -18,6 +18,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
@@ -44,10 +47,19 @@ public class CurrenciesView extends InvestorView {
         
         table.setItems(initRows());
         table.setEditable(false);
+        
+        Button button1 = new Button("Accept");
+        button1.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
+        button1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                button1.setText("klikniety");
+            }
+        });
 
         VBox vBox = (VBox) pane;
         vBox.getChildren().add(table);
         vBox.getChildren().add(lineChart);
+        vBox.getChildren().add((button1));
     }
 
     public LineChart getChart() {
