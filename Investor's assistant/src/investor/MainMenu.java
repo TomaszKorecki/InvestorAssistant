@@ -82,7 +82,7 @@ public class MainMenu extends Application {
      */
     Tab marketIndices = new Tab("Wskaźniki giełdowe");
     Tab companies = new Tab("Spółki");
-    Tab currencies = new Tab("Wauty");
+    Tab currencies = new Tab("Waluty");
     Tab currenciesCorrelations = new Tab("Korelacje walut");
 
     private TabPane CreateTabs() {

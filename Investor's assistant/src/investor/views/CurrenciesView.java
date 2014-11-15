@@ -22,6 +22,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 
 /**
  *
@@ -37,24 +40,30 @@ public class CurrenciesView extends InvestorView {
         //Label label = new Label("Wskaźniki giełdowe");
 
         String month[] = {"Jan", "Feb", "Mar", "Apr", "May"};              //przykladowe dane do wykresow
-        int v1[] = {1000, 1070, 1100, 1130, 1200, 500, 900};
+        double v1[] = {1000.1, 1000.4, 1000.8, 1000.2, 1000.5, 1000.3, 1000.6};
+        double v2[] = {1000.4, 1000.1, 1000.3, 1000.6, 1000.9, 1000.4, 1000.3};
         
         XYChart.Series s = LinearChartManager.createSeries("jeden", LinearChartManager.generateXLabels(DataRange.WEEK), v1);
-        lineChart = LinearChartManager.linear(s);
+        XYChart.Series s1 = LinearChartManager.createSeries("drugi", LinearChartManager.generateXLabels(DataRange.WEEK), v2);
+        lineChart = LinearChartManager.linear();
+        
+        LinearChartManager.addSeries(lineChart, s);
+        
+        //LinearChartManager.addSeries(lineChart, s1, "drugi");
 
         table = new TableView();
         table.getColumns().addAll(initColumns());
         
         table.setItems(initRows());
         table.setEditable(false);
-        
-        Button button1 = new Button("Accept");
-        button1.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
-        button1.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                button1.setText("klikniety");
-            }
-        });
+
+       Button button1 = new Button("Dodaj");
+       button1.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
+       button1.setOnAction(new EventHandler<ActionEvent>() {
+           @Override public void handle(ActionEvent e) {
+               LinearChartManager.addSeries(lineChart, s1);
+           }
+       });
 
         VBox vBox = (VBox) pane;
         vBox.getChildren().add(table);

@@ -18,9 +18,9 @@ public class LinearChartManager {
     /*
      Tworzenie serii danych, dane jako argumenty
      */
-    public static XYChart.Series createSeries(String name, String date[], int value[]) {
+    public static XYChart.Series createSeries(String name, String date[], double value[]) {
         XYChart.Series series = new XYChart.Series();
-        series.setName("wykres z funkcji: " + name);
+        series.setName(name);
         for (int i = 0; i < date.length; i++) {
             series.getData().add(new XYChart.Data(date[i], value[i]));
         }
@@ -31,10 +31,11 @@ public class LinearChartManager {
     /*
      Utworzenie i dodanie serii danych do wykresu
      */
-    public static LineChart<String, Number> linear(XYChart.Series s) {
+    public static LineChart<String, Number> linear() {
 
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
+        yAxis.setForceZeroInRange(false);
         xAxis.setLabel("oś X");
         yAxis.setLabel("oś Y");
 
@@ -43,8 +44,7 @@ public class LinearChartManager {
 
         lineChart.setCreateSymbols(false);
         lineChart.setTitle("Tytuł");
-        lineChart.getData().addAll(s);
-
+        
         return lineChart;
     }
 
@@ -52,6 +52,7 @@ public class LinearChartManager {
 
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
+        yAxis.setForceZeroInRange(false);
         xAxis.setLabel("oś X");
         yAxis.setLabel("oś Y");
 
@@ -79,6 +80,13 @@ public class LinearChartManager {
         s.getData().add(new LineChart.Data<String, Number>(date, value));
     }
 
+    /*
+    dodanie kolejnej linii do wykresu
+    */
+    public static void addSeries(LineChart<String, Number> lineChart, XYChart.Series series) {
+        lineChart.getData().addAll(series);
+    }
+    
     /*
      trzeba  tez dostosowac rozmiar tablicy z wartosciami
      */

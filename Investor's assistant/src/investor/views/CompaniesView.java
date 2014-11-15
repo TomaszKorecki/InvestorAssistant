@@ -25,10 +25,16 @@ public class CompaniesView extends InvestorView{
         //Label label = new Label("Wskaźniki giełdowe");
 
         String month[] = {"Jan", "Feb", "Mar", "Apr", "May"};              //przykladowe dane do wykresow
-        int v1[] = {1000, 1070, 1100, 1130, 1200};
-
-        XYChart.Series s = LinearChartManager.createSeries("jeden", month, v1);
-        lineChart = LinearChartManager.linear(s);
+        double v1[] = {1000.1, 1000.4, 1000.8, 1000.2, 1000.5, 1000.3, 1000.6};
+        double v2[] = {1000.4, 1000.1, 1000.3, 1000.6, 1000.9, 1000.4, 1000.3};
+        
+        XYChart.Series s = LinearChartManager.createSeries("jeden", month, v1);   
+        XYChart.Series s1 = LinearChartManager.createSeries("dwa", month, v2);
+ 
+        lineChart = LinearChartManager.linear();
+        
+        LinearChartManager.addSeries(lineChart, s);
+        LinearChartManager.addSeries(lineChart, s1);
         
         borderPane.setCenter(lineChart);
         //return pane;
