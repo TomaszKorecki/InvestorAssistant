@@ -13,7 +13,7 @@ import investor.data.Index;
  */
 public class Indicators{
     //Metoda do wyliczenia wskaźnika Moving Average, data - dane dla instrumentu, n - liczba cen branych pod uwage
-    public double[] MA(Index[] data,int n){
+    public static double[] MA(Index[] data,int n){
         double[] out = new double[data.length];
         for(int i=0;i<data.length;i++){
             if(data.length-n<=i){
@@ -36,7 +36,7 @@ public class Indicators{
         return out;
     }
     //Metoda do wyliczenia odchylenia standardowego (Standard Deviation), do wyswietlenia na osobnym wykresie
-    public double[] SD(Index[] data,int n){
+    public static double[] SD(Index[] data,int n){
         double[] out = new double[data.length];
         double[] temp = new double[data.length];
         temp=MA(data,n);
@@ -60,7 +60,7 @@ public class Indicators{
     }
     //Wyliczenie wartości wskaźniga Wstęg Bollingera
     //Macierz 3xN, 1 kolumna to SD*K+MA, kolumna 2 to MA, kolumna 3 to MA-SD*K// Przyjmowane K to zwykle ~ 2
-    public double[][] Bollinger(Index[] data,int n,int k){
+    public static double[][] Bollinger(Index[] data,int n,int k){
         double[][] out = new double[3][data.length];
         out[1]=MA(data,n);
         double[] temp = new double[data.length];
@@ -75,7 +75,7 @@ public class Indicators{
     //K-krotnością odchylenia standardowego. Nie wymaga także wyświetlania śedniej kroczącej, dlatego
     //zwracana macierz jest 2xn,kolumna o indeksie 0 to górna linia, 1 dolna
     //Wartość p zwykle ustalana na poziomie 2,5-10%
-    public double[][] Koperta(Index[] data,int n,int p){
+    public static double[][] Koperta(Index[] data,int n,int p){
         double[][] out = new double[2][data.length];
         double[] temp = new double[data.length];
         temp=MA(data,n);
@@ -88,7 +88,7 @@ public class Indicators{
     //Wykładnicza średnia ruchoma (EMA)
     //Podobne do średniej, jednak każda kolejna wartość brana pod uwagę do śedniej posada wykładniczo mniejszą
     //wagę (współczynnik jest równy (1-alfa)^n gdzie n to kolejna cena brana pod uwage przy wyliczaniu aktualenej ceny
-    public double[] EMA(Index[] data,int n,double alfa){
+    public static double[] EMA(Index[] data,int n,double alfa){
         double[] out = new double[data.length];
         for(int i=0;i<data.length;i++){
             int expo=0;

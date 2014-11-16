@@ -95,12 +95,12 @@ public class MainMenu extends Application {
     }
 
     public static void main(String[] args) throws IOException, JSONException {
-        //launch(args);
+        launch(args);
 
-        Index[] data = NetworkManager.showMore(IndexType.WIG20, DataRange.THREEMONTH);
-        
-        for(int i = 0; i < data.length; i++){
-            System.out.println(data[i].getName());
-        }
+//        Index[] data = NetworkManager.showMore(IndexType.WIG20, DataRange.THREEMONTH);
+//        
+//        for(int i = 0; i < data.length; i++){
+//            System.out.println(data[i].getName());
+//        }
     }
 }

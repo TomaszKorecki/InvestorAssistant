@@ -7,11 +7,15 @@ import org.json.*;
  * Created by on 2014-11-11.
  */
 import com.google.gson.annotations.SerializedName;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Index {
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         System.out.println("here I am");
         System.out.println(symbol == null);
         return symbol + "   " + name;
@@ -67,6 +71,17 @@ public class Index {
      */
     public String getDay() {
         return day;
+    }
+
+    public Date getRealDay() {
+        try {
+            //2014-11-10
+            SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+            return parser.parse(getDay());
+        } catch (ParseException ex) {
+            Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     /**
@@ -160,6 +175,4 @@ public class Index {
         this.vol_val = vol_val;
     }
 
- 
-   
 }

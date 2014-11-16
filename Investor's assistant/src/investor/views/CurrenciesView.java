@@ -42,28 +42,28 @@ public class CurrenciesView extends InvestorView {
         String month[] = {"Jan", "Feb", "Mar", "Apr", "May"};              //przykladowe dane do wykresow
         double v1[] = {1000.1, 1000.4, 1000.8, 1000.2, 1000.5, 1000.3, 1000.6};
         double v2[] = {1000.4, 1000.1, 1000.3, 1000.6, 1000.9, 1000.4, 1000.3};
-        
+
         XYChart.Series s = LinearChartManager.createSeries("jeden", LinearChartManager.generateXLabels(DataRange.FIVEDAYS), v1);
         XYChart.Series s1 = LinearChartManager.createSeries("drugi", LinearChartManager.generateXLabels(DataRange.FIVEDAYS), v2);
         lineChart = LinearChartManager.linear();
-        
-        LinearChartManager.addSeries(lineChart, s);
-        
-        //LinearChartManager.addSeries(lineChart, s1, "drugi");
 
+        LinearChartManager.addSeries(lineChart, s);
+
+        //LinearChartManager.addSeries(lineChart, s1, "drugi");
         table = new TableView();
         table.getColumns().addAll(initColumns());
-        
+
         table.setItems(initRows());
         table.setEditable(false);
 
-       Button button1 = new Button("Dodaj");
-       button1.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
-       button1.setOnAction(new EventHandler<ActionEvent>() {
-           @Override public void handle(ActionEvent e) {
-               LinearChartManager.addSeries(lineChart, s1);
-           }
-       });
+        Button button1 = new Button("Dodaj");
+        button1.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
+        button1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                LinearChartManager.addSeries(lineChart, s1);
+            }
+        });
 
         VBox vBox = (VBox) pane;
         vBox.getChildren().add(table);
@@ -79,19 +79,19 @@ public class CurrenciesView extends InvestorView {
         return table;
     }
 
-    private TableColumn[] initColumns() {
+    protected TableColumn[] initColumns() {
         TableColumn name = new TableColumn("Nazwa");
         name.setCellValueFactory(new PropertyValueFactory<Currency, String>("name"));
-        
+
         TableColumn symbol = new TableColumn("Symbol");
         symbol.setCellValueFactory(new PropertyValueFactory<Currency, String>("symbol"));
-        
+
         TableColumn rate = new TableColumn("Kurs");
         rate.setCellValueFactory(new PropertyValueFactory<Currency, String>("rate"));
-        
+
         TableColumn change = new TableColumn("Zmiana");
-        change.setCellValueFactory(new PropertyValueFactory<Currency, String>("change" ));
-        
+        change.setCellValueFactory(new PropertyValueFactory<Currency, String>("change"));
+
         TableColumn[] columns = {name, symbol, rate, change};
         return columns;
     }

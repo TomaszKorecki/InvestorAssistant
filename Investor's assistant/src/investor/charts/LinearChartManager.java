@@ -1,6 +1,8 @@
 package investor.charts;
 
 import investor.data.DataRange;
+import investor.data.Index;
+import investor.indicators.Indicators;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javafx.scene.chart.BarChart;
@@ -44,7 +46,7 @@ public class LinearChartManager {
 
         lineChart.setCreateSymbols(false);
         lineChart.setTitle("Tytuł");
-        
+
         return lineChart;
     }
 
@@ -81,12 +83,12 @@ public class LinearChartManager {
     }
 
     /*
-    dodanie kolejnej linii do wykresu
-    */
+     dodanie kolejnej linii do wykresu
+     */
     public static void addSeries(LineChart<String, Number> lineChart, XYChart.Series series) {
         lineChart.getData().addAll(series);
     }
-    
+
     /*
      trzeba  tez dostosowac rozmiar tablicy z wartosciami
      */
@@ -129,5 +131,29 @@ public class LinearChartManager {
 
         return labels;
     }
+
+    public static String[] generateXLabels(Index[] data) {
+        String labels[] = new String[data.length];
+        for (int i = 0; i < data.length; i++) {
+//            cal.add(Calendar.DATE, +1);
+//            labels[i] = formatter.format(cal.getTime());
+
+            labels[i] = data[i].getDay();
+        }
+        return labels;
+    }
+    
+    public static void addSeries(LineChart<String, Number> lineChart, Index[] data) {
+        //lineChart.getData().addAll(series);
+
+        String labels[] = generateXLabels(data);
+        double values[] = Indicators.SD(data, 3);
+
+        XYChart.Series s = LinearChartManager.createSeries("SD", labels, values);      
+        
+        lineChart.getData().addAll(s);
+    }
+    
+    
 
 }
