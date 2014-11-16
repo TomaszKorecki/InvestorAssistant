@@ -60,15 +60,15 @@ public class NetworkManager {
             case FIVEDAYS:
                 url += "5D";
                 break;
-                
             case TENDAYS:
                 url += "10D";
-                
+                break;
             case ONEMONTH:
                 url += "1M";
-                
+                break;
             case THREEMONTH:
                 url += "3M";
+                break;
         }
         
         return url;
