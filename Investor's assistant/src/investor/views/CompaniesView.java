@@ -6,41 +6,73 @@
 package investor.views;
 
 import investor.charts.LinearChartManager;
+import investor.data.DataRange;
+import investor.data.Index;
+import investor.network.DataType;
+import investor.network.NetworkManager;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 /**
  *
  * @author Tomasz
  */
-public class CompaniesView extends InvestorView{
-    //private BorderPane borderPane;
-    private LineChart lineChart;
-    
-    public void InitView(){
-         pane = new BorderPane();
-         
-         BorderPane borderPane = (BorderPane)pane;
-        //Label label = new Label("Wskaźniki giełdowe");
+public class CompaniesView extends InvestorView {
 
-        String month[] = {"Jan", "Feb", "Mar", "Apr", "May"};              //przykladowe dane do wykresow
-        double v1[] = {1000.1, 1000.4, 1000.8, 1000.2, 1000.5, 1000.3, 1000.6};
-        double v2[] = {1000.4, 1000.1, 1000.3, 1000.6, 1000.9, 1000.4, 1000.3};
-        
-        XYChart.Series s = LinearChartManager.createSeries("jeden", month, v1);   
-        XYChart.Series s1 = LinearChartManager.createSeries("dwa", month, v2);
- 
+    //private BorderPane borderPane;
+
+    private LineChart lineChart;
+    private TableView table;
+
+    public void InitView() {
+        pane = new VBox();
         lineChart = LinearChartManager.linear();
-        
-        LinearChartManager.addSeries(lineChart, s);
-        LinearChartManager.addSeries(lineChart, s1);
-        
-        borderPane.setCenter(lineChart);
-        //return pane;
+        lineChart.setTitle("");
+
+        table = new TableView();
+
+        try {
+            table.getItems().addAll(NetworkManager.show(DataType.SPOL));
+        } catch (Exception e) {
+            System.out.println("Something went wrong when populating market indicisies view");
+        }
+
+        table.getColumns().addAll(initColumns());
+
+        table.setRowFactory(tv -> {
+            TableRow<Index> row = new TableRow<Index>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    Index rowData = row.getItem();
+                    //System.out.println(rowData);
+                    try {
+                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), DataRange.THREEMONTH);
+                        System.out.println(data.length);
+
+                        lineChart.getData().clear();
+                        LinearChartManager.addSeries(lineChart, data);
+
+                    } catch (Exception ex) {
+                        System.out.println("Error while downloading indicise " + ex.toString());
+                    }
+                }
+            });
+            return row;
+        });
+
+        //table.setItems(initRows());
+        table.setEditable(false);
+
+        VBox vBox = (VBox) pane;
+        vBox.getChildren().add(table);
+        vBox.getChildren().add(lineChart);
     }
-    
-    public LineChart GetChart(){
+
+    public LineChart GetChart() {
         return lineChart;
     }
 }

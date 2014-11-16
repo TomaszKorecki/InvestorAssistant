@@ -17,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import investor.views.CompaniesView;
 import investor.views.CurrenciesCorrelationsView;
 import investor.views.CurrenciesView;
+import investor.views.GoodsView;
 import investor.views.InvestorView;
 import investor.views.MarketIndicisesView;
 import java.io.IOException;
@@ -36,8 +37,9 @@ public class MainMenu extends Application {
     CompaniesView companiesView = new CompaniesView();
     CurrenciesView currenciesView = new CurrenciesView();
     CurrenciesCorrelationsView currenciesCorrelationView = new CurrenciesCorrelationsView();
+    GoodsView goodsView = new GoodsView();
 
-    InvestorView[] views = {marketIndicicesView, companiesView, currenciesView, currenciesCorrelationView};
+    InvestorView[] views = {marketIndicicesView, companiesView, currenciesView, goodsView, currenciesCorrelationView};
 
     @Override
     public void start(Stage primaryStage) {
@@ -65,9 +67,10 @@ public class MainMenu extends Application {
                             borderPane.setCenter(companiesView.getPane());
                         } else if (t1 == currencies) {
                             borderPane.setCenter(currenciesView.getPane());
-                        } else if (t1 == currenciesCorrelations) {
+                        } else if (t1 == goods) {
+                            borderPane.setCenter(goodsView.getPane());
+                        } else if( t1 == currenciesCorrelations)
                             borderPane.setCenter(currenciesCorrelationView.getPane());
-                        }
                     }
                 }
         );
@@ -86,10 +89,11 @@ public class MainMenu extends Application {
     Tab companies = new Tab("Spółki");
     Tab currencies = new Tab("Waluty");
     Tab currenciesCorrelations = new Tab("Korelacje walut");
+    Tab goods = new Tab("Towary");
 
     private TabPane CreateTabs() {
         TabPane tabPane = new TabPane();
-        tabPane.getTabs().addAll(marketIndices, companies, currencies, currenciesCorrelations);
+        tabPane.getTabs().addAll(marketIndices, companies, currencies, goods, currenciesCorrelations);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         return tabPane;
     }

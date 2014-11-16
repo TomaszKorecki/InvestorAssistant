@@ -115,8 +115,8 @@ public class NetworkManager {
         return downloadFromServer(buildUrl(type));
     }
     
-    public static Index[] showMore(IndexType type, DataRange range) throws IOException, JSONException {
-        return downloadFromServer(buildUrl(type.toString().toLowerCase(), range));
+    public static Index[] showMore(String what, DataRange range) throws IOException, JSONException {
+        return downloadFromServer(buildUrl(what.toLowerCase(), range));
     }
     
    

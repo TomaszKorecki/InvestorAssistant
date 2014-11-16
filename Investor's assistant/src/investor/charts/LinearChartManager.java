@@ -147,7 +147,11 @@ public class LinearChartManager {
         //lineChart.getData().addAll(series);
 
         String labels[] = generateXLabels(data);
-        double values[] = Indicators.SD(data, 3);
+        double values[] = new double[data.length];
+        
+        for(int i=0; i < data.length; i++){
+            values[i] = data[i].getClose_val();
+        }
 
         XYChart.Series s = LinearChartManager.createSeries("SD", labels, values);      
         
