@@ -8,6 +8,8 @@ package investor.views;
 import investor.charts.CandleChart;
 import investor.charts.CandleChart.CandleStickChart;
 import investor.charts.LinearChartManager;
+import investor.data.Index;
+import java.util.Date;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.BorderPane;
@@ -43,8 +45,43 @@ public class CurrenciesCorrelationsView extends InvestorView {
             
             BorderPane bPane = (BorderPane)pane;
             
+//            CandleChart candle = new CandleChart();
+//            CandleStickChart chart = candle.createChart();
+            
+            
+            //dla przykładu, dwa obiekty typu index
+            Index data[] = new Index[2];
+            
+            Index index = new Index();
+        index.setSymbol("WIG20");
+        index.setName("WIG20");
+        index.setDay("1");
+        index.setHour("17:15");
+        index.setMin_val(16);
+        index.setMax_val(32);
+        index.setOpen_val(25);
+        index.setClose_val(20);
+        index.setVol_val(30);
+       
+        Index index1 = new Index();
+        index1.setSymbol("WIG20");
+        index1.setName("WIG20");
+        index1.setDay("2");
+        index1.setHour("17:15");
+        index1.setMin_val(22);
+        index1.setMax_val(33);
+        index1.setOpen_val(26);
+        index1.setClose_val(30);
+        index1.setVol_val(26);
+            
+        data[0] = index;
+        data[1] = index1;
+        
+            CandleChart.generateData(data);
+            
             CandleChart candle = new CandleChart();
             CandleStickChart chart = candle.createChart();
+            
             pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
             
             bPane.setCenter(chart);
