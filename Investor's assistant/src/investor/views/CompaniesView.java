@@ -10,12 +10,16 @@ import investor.data.DataRange;
 import investor.data.Index;
 import investor.network.DataType;
 import investor.network.NetworkManager;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import org.json.JSONException;
 
 /**
  *
@@ -24,11 +28,11 @@ import javafx.scene.layout.VBox;
 public class CompaniesView extends InvestorView {
 
     //private BorderPane borderPane;
-
     private LineChart lineChart;
     private TableView table;
 
     public void InitView() {
+        selectedRange = DataRange.THREEMONTH;
         pane = new VBox();
         lineChart = LinearChartManager.linear();
         lineChart.setTitle("");
@@ -48,9 +52,10 @@ public class CompaniesView extends InvestorView {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Index rowData = row.getItem();
+                    selectedIndex = rowData;
                     //System.out.println(rowData);
                     try {
-                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), DataRange.THREEMONTH);
+                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
                         System.out.println(data.length);
 
                         lineChart.getData().clear();
@@ -68,11 +73,30 @@ public class CompaniesView extends InvestorView {
         table.setEditable(false);
 
         VBox vBox = (VBox) pane;
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(lineChart);
+        borderPane.setRight(addMenuButtons());
+
         vBox.getChildren().add(table);
-        vBox.getChildren().add(lineChart);
+        vBox.getChildren().add(borderPane);
     }
 
     public LineChart GetChart() {
         return lineChart;
+    }
+
+    protected void OnDataRangeChanged() {
+        if (selectedIndex != null) {
+            Index[] data = null;
+            try {
+                data = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
+            } catch (Exception ex) {
+                Logger.getLogger(CompaniesView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            lineChart.getData().clear();
+            LinearChartManager.addSeries(lineChart, data);
+        }
     }
 }

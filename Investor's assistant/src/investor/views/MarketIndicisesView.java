@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableColumn;
@@ -23,6 +24,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.json.JSONException;
 
@@ -39,6 +41,7 @@ public class MarketIndicisesView extends InvestorView {
         pane = new VBox();
         lineChart = LinearChartManager.linear();
         lineChart.setTitle("");
+        selectedRange = DataRange.THREEMONTH;
 
         table = new TableView();
 
@@ -55,9 +58,10 @@ public class MarketIndicisesView extends InvestorView {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Index rowData = row.getItem();
+                    selectedIndex = rowData;
                     //System.out.println(rowData);
                     try {
-                        Index[] data = NetworkManager.showMore(rowData.getName(), DataRange.THREEMONTH);
+                        Index[] data = NetworkManager.showMore(rowData.getName(), selectedRange);
                         System.out.println(data.length);
 
                         lineChart.getData().clear();
@@ -75,12 +79,34 @@ public class MarketIndicisesView extends InvestorView {
         table.setEditable(false);
 
         VBox vBox = (VBox) pane;
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(lineChart);
+        borderPane.setRight(addMenuButtons());
+
         vBox.getChildren().add(table);
-        vBox.getChildren().add(lineChart);
+        vBox.getChildren().add(borderPane);
+        //vBox.getChildren().add(addMenuButtons());
+        //vBox.getChildren().add(lineChart);
     }
 
     public LineChart GetChart() {
         return lineChart;
+    }
+
+    protected void OnDataRangeChanged() {
+        if (selectedIndex != null) {
+            System.out.println("Preparing for downloading for " + selectedRange.toString());
+            Index[] data = null;
+            try {
+                data = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
+            } catch (Exception ex) {
+                Logger.getLogger(CompaniesView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            lineChart.getData().clear();
+            LinearChartManager.addSeries(lineChart, data);
+        }
     }
 
 }

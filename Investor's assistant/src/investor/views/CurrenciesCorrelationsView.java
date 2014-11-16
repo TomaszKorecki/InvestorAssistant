@@ -85,11 +85,14 @@ public class CurrenciesCorrelationsView extends InvestorView {
             pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
             
             bPane.setCenter(chart);
-            
-            /////////////////////////////////////
     }
     
     public LineChart GetChart(){
         return lineChart;
+    }
+    
+    protected void OnDataRangeChanged(){
+        
+        
     }
 }

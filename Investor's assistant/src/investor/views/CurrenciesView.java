@@ -12,6 +12,8 @@ import investor.data.Index;
 import investor.network.DataType;
 import investor.network.IndexType;
 import investor.network.NetworkManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableColumn;
@@ -30,6 +32,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableRow;
+import javafx.scene.layout.BorderPane;
 
 /**
  *
@@ -41,6 +44,7 @@ public class CurrenciesView extends InvestorView {
     private TableView table;
 
     public void InitView() {
+        selectedRange = DataRange.THREEMONTH;
         pane = new VBox();
         lineChart = LinearChartManager.linear();
         lineChart.setTitle("");
@@ -60,9 +64,10 @@ public class CurrenciesView extends InvestorView {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     Index rowData = row.getItem();
+                    selectedIndex = rowData;
                     //System.out.println(rowData);
                     try {
-                        Index[] data = NetworkManager.showMore(rowData.getSymbol().substring(1), DataRange.THREEMONTH);
+                        Index[] data = NetworkManager.showMore(rowData.getSymbol().substring(1), selectedRange);
                         System.out.println(data.length);
 
                         lineChart.getData().clear();
@@ -80,8 +85,13 @@ public class CurrenciesView extends InvestorView {
         table.setEditable(false);
 
         VBox vBox = (VBox) pane;
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(lineChart);
+        borderPane.setRight(addMenuButtons());
+
         vBox.getChildren().add(table);
-        vBox.getChildren().add(lineChart);
+        vBox.getChildren().add(borderPane);
     }
 
     public LineChart getChart() {
@@ -92,30 +102,17 @@ public class CurrenciesView extends InvestorView {
         return table;
     }
 
-//    protected TableColumn[] initColumns() {
-//        TableColumn name = new TableColumn("Nazwa");
-//        name.setCellValueFactory(new PropertyValueFactory<Currency, String>("name"));
-//
-//        TableColumn symbol = new TableColumn("Symbol");
-//        symbol.setCellValueFactory(new PropertyValueFactory<Currency, String>("symbol"));
-//
-//        TableColumn rate = new TableColumn("Kurs");
-//        rate.setCellValueFactory(new PropertyValueFactory<Currency, String>("rate"));
-//
-//        TableColumn change = new TableColumn("Zmiana");
-//        change.setCellValueFactory(new PropertyValueFactory<Currency, String>("change"));
-//
-//        TableColumn[] columns = {name, symbol, rate, change};
-//        return columns;
-//    }
-//
-//    private ObservableList<Currency> initRows() {
-//        ObservableList<Currency> data
-//                = FXCollections.observableArrayList(
-//                        new Currency("Dolar amerykański", "1 USD", 3.124f, 0.94f),
-//                        new Currency("Euro", "1 EUR", 4.214f, 0.007f),
-//                        new Currency("Frank szwajcarski", "1 CHF", 3.507f, 0.11f)
-//                );
-//        return data;
-//    }
+    protected void OnDataRangeChanged() {
+        if (selectedIndex != null) {
+            Index[] data = null;
+            try {
+                data = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
+            } catch (Exception ex) {
+                Logger.getLogger(CompaniesView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            lineChart.getData().clear();
+            LinearChartManager.addSeries(lineChart, data);
+        }
+    }
 }
