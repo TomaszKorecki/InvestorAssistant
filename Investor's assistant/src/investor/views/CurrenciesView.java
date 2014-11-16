@@ -6,11 +6,9 @@
 package investor.views;
 
 import investor.charts.LinearChartManager;
-import investor.data.Currency;
 import investor.data.DataRange;
 import investor.data.Index;
 import investor.network.DataType;
-import investor.network.IndexType;
 import investor.network.NetworkManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,7 +65,7 @@ public class CurrenciesView extends InvestorView {
                     selectedIndex = rowData;
                     //System.out.println(rowData);
                     try {
-                        Index[] data = NetworkManager.showMore(rowData.getSymbol().substring(1), selectedRange);
+                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
                         System.out.println(data.length);
 
                         lineChart.getData().clear();

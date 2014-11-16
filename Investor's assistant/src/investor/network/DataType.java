@@ -7,7 +7,8 @@ package investor.network;
 
 /**
  *
- * @author Tomasz
+ * Mamy 4 typy danych:
+ * Indeksy giełdowe, spółki, waluty oraz towary
  */
 public enum DataType {
     WSK, SPOL, FOREX, TWR

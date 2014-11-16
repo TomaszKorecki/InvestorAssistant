@@ -82,39 +82,14 @@ public class NetworkManager {
         }
         return sb.toString();
     }
-//
-//    public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
-//        InputStream is = new URL(url).openStream();
-//        try {
-//            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-//            String jsonText = readAll(rd);
-//            JSONObject json = new JSONObject(jsonText);
-//            return json;
-//        } finally {
-//            is.close();
-//        }
-//    }
-//    public static Index[] downloadIndices(DataRange range) throws IOException, JSONException{
-//        
-//        //Przykladowy json
-//        //https://api.myjson.com/bins/3202b
-//        InputStream is = new URL("https://api.myjson.com/bins/3202b").openStream();
-//        try {
-//            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-//            String jsonText = readAll(rd);
-//            
-//            System.out.println(jsonText);
-//            
-//            return converter.fromJson(jsonText, Index[].class);
-//            
-//        } finally {
-//            is.close();
-//        }
-//    }
+
+    // Pobranie z serwera wszystkich indeksów, spółek, walut lub towarów
     public static Index[] show(DataType type) throws IOException, JSONException {
         return downloadFromServer(buildUrl(type));
     }
     
+    
+    //Pobranie z serwera danych dla danego instrumentu w odpowiednim zakresie
     public static Index[] showMore(String what, DataRange range) throws IOException, JSONException {
         return downloadFromServer(buildUrl(what.toLowerCase(), range));
     }

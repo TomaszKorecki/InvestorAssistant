@@ -27,8 +27,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
+ * Główna klasa z GUI. Są w niej tworzone wszystkie widoki i zakładki.
  *
- * @author Tomasz
+ *
  */
 public class MainMenu extends Application {
 
@@ -57,6 +58,7 @@ public class MainMenu extends Application {
 
         borderPane.setCenter(marketIndicicesView.getPane());
 
+        //Event handler do zakładek. 
         tabs.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
                     @Override
@@ -69,8 +71,9 @@ public class MainMenu extends Application {
                             borderPane.setCenter(currenciesView.getPane());
                         } else if (t1 == goods) {
                             borderPane.setCenter(goodsView.getPane());
-                        } else if( t1 == currenciesCorrelations)
+                        } else if (t1 == currenciesCorrelations) {
                             borderPane.setCenter(currenciesCorrelationView.getPane());
+                        }
                     }
                 }
         );
@@ -100,11 +103,5 @@ public class MainMenu extends Application {
 
     public static void main(String[] args) throws IOException, JSONException {
         launch(args);
-
-//        Index[] data = NetworkManager.showMore(IndexType.WIG20, DataRange.THREEMONTH);
-//        
-//        for(int i = 0; i < data.length; i++){
-//            System.out.println(data[i].getName());
-//        }
     }
 }

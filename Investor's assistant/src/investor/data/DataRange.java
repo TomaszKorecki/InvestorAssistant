@@ -6,7 +6,7 @@
 package investor.data;
 
 /**
- *
+ * Zakres danych
  * @author Tomasz
  */
 public enum DataRange {

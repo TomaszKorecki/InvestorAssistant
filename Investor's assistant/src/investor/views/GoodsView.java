@@ -6,11 +6,9 @@
 package investor.views;
 
 import investor.charts.LinearChartManager;
-import investor.data.Currency;
 import investor.data.DataRange;
 import investor.data.Index;
 import investor.network.DataType;
-import investor.network.IndexType;
 import investor.network.NetworkManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
