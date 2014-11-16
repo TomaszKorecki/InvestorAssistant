@@ -24,10 +24,10 @@ public class Index {
     private String name;
 
     @SerializedName("dzien")
-    private Date day;
+    private String day;
 
     @SerializedName("godzina")
-    private Date hour;
+    private String hour;
     private double open_val;
     private double close_val;
     private double min_val;
@@ -65,28 +65,28 @@ public class Index {
     /**
      * @return the day
      */
-    public Date getDay() {
+    public String getDay() {
         return day;
     }
 
     /**
      * @param day the day to set
      */
-    public void setDay(Date day) {
+    public void setDay(String day) {
         this.day = day;
     }
 
     /**
      * @return the hour
      */
-    public Date getHour() {
+    public String getHour() {
         return hour;
     }
 
     /**
      * @param hour the hour to set
      */
-    public void setHour(Date hour) {
+    public void setHour(String hour) {
         this.hour = hour;
     }
 

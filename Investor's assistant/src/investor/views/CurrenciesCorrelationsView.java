@@ -8,8 +8,6 @@ package investor.views;
 import investor.charts.CandleChart;
 import investor.charts.CandleChart.CandleStickChart;
 import investor.charts.LinearChartManager;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.BorderPane;

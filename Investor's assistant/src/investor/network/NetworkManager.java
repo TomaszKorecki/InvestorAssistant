@@ -33,9 +33,8 @@ public class NetworkManager {
 
     public static String serverUrl = "https://zpi.herokuapp.com/show/";
 
-    private static String buildUrl(DataType dataType, DataRange dataRange) {
+    private static String buildUrl(DataType dataType) {
         String url = serverUrl;
-
         switch (dataType) {
             case FOREX:
                 url += "forex";
@@ -51,11 +50,27 @@ public class NetworkManager {
                 break;
         }
 
-        //TODO: Dopisać switcha
-        switch (dataRange) {
-
+        return url;
+    }
+    
+    private static String buildUrl(String dataType, DataRange range){
+        String url = serverUrl + dataType + "/";
+        
+        switch(range){
+            case FIVEDAYS:
+                url += "5D";
+                break;
+                
+            case TENDAYS:
+                url += "10D";
+                
+            case ONEMONTH:
+                url += "1M";
+                
+            case THREEMONTH:
+                url += "3M";
         }
-
+        
         return url;
     }
 
@@ -96,20 +111,26 @@ public class NetworkManager {
 //            is.close();
 //        }
 //    }
-    public static Index[] downloadIndices(DataRange range) throws IOException, JSONException {
-        return downloadFromServer(DataType.WSK, range);
+    public static Index[] show(DataType type) throws IOException, JSONException {
+        return downloadFromServer(buildUrl(type));
     }
+    
+    public static Index[] showMore(IndexType type, DataRange range) throws IOException, JSONException {
+        return downloadFromServer(buildUrl(type.toString().toLowerCase(), range));
+    }
+    
+   
 
-    private static <T> T[] downloadFromServer(DataType dataType, DataRange dataRange) throws IOException, JSONException {
-        InputStream is = new URL(buildUrl(dataType, dataRange)).openStream();
+    private static Index[] downloadFromServer(String url) throws IOException, JSONException {
+        System.out.println("Connecting to url \n" + url);
+        InputStream is = new URL(url).openStream();
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
 
             System.out.println(jsonText);
-            Type listType = new TypeToken<T[]>() {
-            }.getType();
-            return converter.fromJson(jsonText, listType);
+            //Type listType = new TypeToken<T[]>() {}.getType();
+            return converter.fromJson(jsonText, Index[].class);
         } finally {
             is.close();
         }

@@ -95,16 +95,19 @@ public class LinearChartManager {
         int days;
 
         switch (r) {
-            case THREEMONTHS:
-                days = 120;
+            case FIVEDAYS:
+                days = 5;
                 break;
 
-            case MONTH:
+            case TENDAYS:
+                days = 10;
+                break;
+
+            case ONEMONTH:
                 days = 30;
                 break;
-
-            case WEEK:
-                days = 7;
+            case THREEMONTH:
+                days = 90;
                 break;
 
             default:

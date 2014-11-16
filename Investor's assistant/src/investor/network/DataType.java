@@ -12,3 +12,5 @@ package investor.network;
 public enum DataType {
     WSK, SPOL, FOREX, TWR
 }
+
+

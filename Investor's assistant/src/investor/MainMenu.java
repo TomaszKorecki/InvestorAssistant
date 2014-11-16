@@ -3,6 +3,8 @@ package investor;
 import com.google.gson.Gson;
 import investor.data.DataRange;
 import investor.data.Index;
+import investor.network.DataType;
+import investor.network.IndexType;
 import investor.network.NetworkManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -93,8 +95,12 @@ public class MainMenu extends Application {
     }
 
     public static void main(String[] args) throws IOException, JSONException {
-        launch(args);
+        //launch(args);
 
+        Index[] data = NetworkManager.showMore(IndexType.WIG20, DataRange.THREEMONTH);
         
+        for(int i = 0; i < data.length; i++){
+            System.out.println(data[i].getName());
+        }
     }
 }

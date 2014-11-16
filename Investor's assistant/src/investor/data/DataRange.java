@@ -10,5 +10,5 @@ package investor.data;
  * @author Tomasz
  */
 public enum DataRange {
-    DAY, WEEK, MONTH, THREEMONTHS;
+    FIVEDAYS, TENDAYS, ONEMONTH, THREEMONTH
 }

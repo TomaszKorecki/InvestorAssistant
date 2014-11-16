@@ -43,8 +43,8 @@ public class CurrenciesView extends InvestorView {
         double v1[] = {1000.1, 1000.4, 1000.8, 1000.2, 1000.5, 1000.3, 1000.6};
         double v2[] = {1000.4, 1000.1, 1000.3, 1000.6, 1000.9, 1000.4, 1000.3};
         
-        XYChart.Series s = LinearChartManager.createSeries("jeden", LinearChartManager.generateXLabels(DataRange.WEEK), v1);
-        XYChart.Series s1 = LinearChartManager.createSeries("drugi", LinearChartManager.generateXLabels(DataRange.WEEK), v2);
+        XYChart.Series s = LinearChartManager.createSeries("jeden", LinearChartManager.generateXLabels(DataRange.FIVEDAYS), v1);
+        XYChart.Series s1 = LinearChartManager.createSeries("drugi", LinearChartManager.generateXLabels(DataRange.FIVEDAYS), v2);
         lineChart = LinearChartManager.linear();
         
         LinearChartManager.addSeries(lineChart, s);
