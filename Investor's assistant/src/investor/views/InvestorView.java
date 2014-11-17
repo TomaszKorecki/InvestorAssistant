@@ -146,14 +146,56 @@ public abstract class InvestorView {
         //TODO
         //Tu trzeba dodać jeszcze toogle buttony do obsługi wskaźników, proponuję dodać również prcysisk do ukrywania wykresu ze wskaźnikiem
         
+        //----------------------------------------------------------------------
+        //Buttony do wskaźników
+        //----------------------------------------------------------------------
         
+        FlowPane pointerGroupPane = new FlowPane();
+        pointerGroupPane.setAlignment(Pos.CENTER);
+        pointerGroupPane.setPrefWrapLength(70);
         
-        
-        
-        
+        //Stworzenie przycisków do wyboru wskaźników
+        final ToggleGroup pointerGroup = new ToggleGroup();
 
+        ToggleButton wsk1 = new ToggleButton();
+        wsk1.setMinSize(48, 48);
+        wsk1.setText("wsk1");
+
+        ToggleButton wsk2 = new ToggleButton();
+        wsk2.setMinSize(48, 48);
+        wsk2.setText("wsk2");
+        
+        ToggleButton wsk3 = new ToggleButton();
+        wsk3.setMinSize(48, 48);
+        wsk3.setText("wsk3");
+        
+        ToggleButton wsk4 = new ToggleButton();
+        wsk4.setMinSize(48, 48);
+        wsk4.setText("wsk4");
+        
+        ToggleButton wsk5 = new ToggleButton();
+        wsk5.setMinSize(48, 48);
+        wsk5.setText("wsk5");
+        
+        ToggleButton hide = new ToggleButton();
+        hide.setMinSize(48, 48);
+        hide.setText("hide");
+        
+        wsk1.setToggleGroup((pointerGroup));
+        wsk2.setToggleGroup((pointerGroup));
+        wsk3.setToggleGroup((pointerGroup));
+        wsk4.setToggleGroup((pointerGroup));
+        wsk5.setToggleGroup((pointerGroup));
+        hide.setToggleGroup((pointerGroup));
+        
+        pointerGroup.selectToggle(hide);
+
+        pointerGroupPane.getChildren().addAll(wsk1, wsk2, wsk3, wsk4, wsk5, hide);
+        //----------------------------------------------------------------------
+        
         mainPane.add(chartGroupPane, 0, 0);
         mainPane.add(flowPane, 0, 1);
+        mainPane.add(pointerGroupPane, 0, 2);
 
         return mainPane;
     }
