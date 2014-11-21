@@ -83,6 +83,8 @@ public class Indicators{
             out[0][i]=temp[i]+((double)p/100)*temp[i];
             out[1][i]=temp[i]-((double)p/100)*temp[i];
         }
+        out[0]=Reverse(out[0]);
+        out[1]=Reverse(out[1]);
         return out;
     }
     //Wykładnicza średnia ruchoma (EMA)
@@ -112,5 +114,13 @@ public class Indicators{
             }
         }
         return out;
+    }
+    
+    public static double[] Reverse(double[] Arr){
+       double[] temp = new double[Arr.length];
+       for(int i=0;i<Arr.length;i++){
+           temp[i]=Arr[Arr.length-1-i];
+       }
+       return temp;
     }
 }
