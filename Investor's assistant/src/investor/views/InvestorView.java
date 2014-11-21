@@ -37,6 +37,18 @@ public abstract class InvestorView {
     //Wybrany zakres danych dla danego widoku
     protected DataRange selectedRange;
     
+    //rodzaj wybranego wskaznika
+    protected String pointerType;
+    
+    //rodzaj ostatniego wybranego wskaznika
+    protected String lastPointerType = "hide";
+    
+    //współczynnik K dla metody bollingera
+    protected static int K = 2;
+    
+    //współczynnik P dla metody koperty
+    protected static int P = 5;
+    
     //Wybrany index dla danego widoku, może być nullem jeśli jeszcze nic nie wybraliśmy
     protected Index selectedIndex;
 
@@ -160,26 +172,32 @@ public abstract class InvestorView {
         ToggleButton MA = new ToggleButton();
         MA.setMinSize(48, 48);
         MA.setText("MA");
+        MA.setUserData("MA");
 
         ToggleButton SD = new ToggleButton();
         SD.setMinSize(48, 48);
         SD.setText("SD");
+        SD.setUserData("SD");
         
         ToggleButton bollinger = new ToggleButton();
         bollinger.setMinSize(48, 48);
         bollinger.setText("Bollinger");
+        bollinger.setUserData("bollinger");
         
         ToggleButton koperta = new ToggleButton();
         koperta.setMinSize(48, 48);
         koperta.setText("Koperta");
+        koperta.setUserData("koperta");
         
         ToggleButton EMA = new ToggleButton();
         EMA.setMinSize(48, 48);
         EMA.setText("EMA");
+        EMA.setUserData("EMA");
         
         ToggleButton hide = new ToggleButton();
         hide.setMinSize(48, 48);
         hide.setText("hide");
+        hide.setUserData("hide");
         
         MA.setToggleGroup((pointerGroup));
         SD.setToggleGroup((pointerGroup));
@@ -191,6 +209,18 @@ public abstract class InvestorView {
         pointerGroup.selectToggle(hide);
 
         pointerGroupPane.getChildren().addAll(MA, SD, bollinger, koperta, EMA, hide);
+        
+        pointerGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
+                
+                System.out.println(new_toggle.toString());
+                
+                //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
+                lastPointerType = pointerType;
+                pointerType = (String)new_toggle.getUserData();
+                OnPointerChange();
+            }
+        });
         //----------------------------------------------------------------------
         
         mainPane.add(chartGroupPane, 0, 0);
@@ -224,5 +254,6 @@ public abstract class InvestorView {
 
     //Metoda wywoływana w klasach pochodnych po zmianie zakresu dat
     protected abstract void OnDataRangeChanged();
+    protected abstract void OnPointerChange();
 
 }

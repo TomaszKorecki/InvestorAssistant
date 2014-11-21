@@ -9,7 +9,11 @@ import investor.charts.CandleChart;
 import investor.charts.CandleChart.CandleStickChart;
 import investor.charts.LinearChartManager;
 import investor.data.Index;
+import investor.indicators.Indicators;
+import investor.network.NetworkManager;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.BorderPane;
@@ -94,5 +98,9 @@ public class CurrenciesCorrelationsView extends InvestorView {
     protected void OnDataRangeChanged(){
         
         
+    }
+    
+    protected void OnPointerChange() {
+
     }
 }
