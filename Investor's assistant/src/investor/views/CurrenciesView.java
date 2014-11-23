@@ -300,4 +300,11 @@ public class CurrenciesView extends InvestorView {
                 default  : break;
             }
     }
+    
+    protected void OnSDPointer(boolean action){
+        
+        
+        
+        
+    }
 }

@@ -285,4 +285,11 @@ public class CompaniesView extends InvestorView {
                 default  : break;
             }
     }
+    
+    protected void OnSDPointer(boolean action){
+        
+        
+        
+        
+    }
 }

@@ -33,33 +33,34 @@ public abstract class InvestorView {
 
     //Panel widoku
     protected Pane pane;
-    
+
     //Wybrany zakres danych dla danego widoku
     protected DataRange selectedRange;
-    
+
     //rodzaj wybranego wskaznika
     protected String pointerType;
-    
+
     //rodzaj ostatniego wybranego wskaznika
     protected String lastPointerType = "hide";
-    
+
     //współczynnik K dla metody bollingera
     protected static int K = 2;
-    
+
     //współczynnik P dla metody koperty
     protected static int P = 5;
-    
+
     //Wybrany index dla danego widoku, może być nullem jeśli jeszcze nic nie wybraliśmy
     protected Index selectedIndex;
+    
+    protected boolean sdChartShowed = false;
 
     public Pane getPane() {
         return pane;
     }
-    
+
     //Metoda abstrakcyjna, w której musi zostać napisany kod do generowania widoku
     public abstract void InitView();
 
-    
     //Stworzenie kolumn do tabelki
     protected TableColumn[] initColumns() {
         TableColumn symbol = new TableColumn("Symbol");
@@ -93,7 +94,6 @@ public abstract class InvestorView {
         return columns;
     }
 
-    
     //Dodanie przycisków obsługujących wykresy
     protected Pane addMenuButtons() {
 
@@ -102,7 +102,7 @@ public abstract class InvestorView {
 
         HBox chartGroupPane = new HBox();
         chartGroupPane.setAlignment(Pos.CENTER);
-        
+
         //Stworzenie przycisków do wyboru typu wykresu (liniowy, świecowy)
         final ToggleGroup chartGroup = new ToggleGroup();
 
@@ -119,12 +119,11 @@ public abstract class InvestorView {
         candle.setToggleGroup((chartGroup));
 
         chartGroupPane.getChildren().addAll(line, candle);
-        
+
         //Na wstepie wybrany zostaje wykres liniowy
         chartGroup.selectToggle(line);
         ////////////////////
-        
-        
+
         //Stworzenie przycisków do wyboru zakresu dat
         final ToggleGroup rangeGroup = new ToggleGroup();
         List<DataRange> enumList = Arrays.asList(DataRange.values());
@@ -142,30 +141,26 @@ public abstract class InvestorView {
         }
 
         rangeGroup.selectToggle(rangeGroup.getToggles().get(3));
-        
+
         //Obsługa przycisków do wyboru zakresu dat
         //W klasach dziedziczących po InvestorView wywoływana jest abstrakcyjna metoda OnDataRangeChanged
         rangeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
-                
+
                 System.out.println(new_toggle.toString());
-                
-                selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
+
+                selectedRange = DataRange.valueOf((String) new_toggle.getUserData());
                 OnDataRangeChanged();
             }
         });
-        
-        //TODO
-        //Tu trzeba dodać jeszcze toogle buttony do obsługi wskaźników, proponuję dodać również prcysisk do ukrywania wykresu ze wskaźnikiem
-        
+
         //----------------------------------------------------------------------
         //Buttony do wskaźników
         //----------------------------------------------------------------------
-        
         FlowPane pointerGroupPane = new FlowPane();
         pointerGroupPane.setAlignment(Pos.CENTER);
         pointerGroupPane.setPrefWrapLength(70);
-        
+
         //Stworzenie przycisków do wyboru wskaźników
         final ToggleGroup pointerGroup = new ToggleGroup();
 
@@ -178,49 +173,60 @@ public abstract class InvestorView {
         SD.setMinSize(48, 48);
         SD.setText("SD");
         SD.setUserData("SD");
-        
+
         ToggleButton bollinger = new ToggleButton();
         bollinger.setMinSize(48, 48);
         bollinger.setText("Bollinger");
         bollinger.setUserData("bollinger");
-        
+
         ToggleButton koperta = new ToggleButton();
         koperta.setMinSize(48, 48);
         koperta.setText("Koperta");
         koperta.setUserData("koperta");
-        
+
         ToggleButton EMA = new ToggleButton();
         EMA.setMinSize(48, 48);
         EMA.setText("EMA");
         EMA.setUserData("EMA");
-        
+
         ToggleButton hide = new ToggleButton();
         hide.setMinSize(48, 48);
         hide.setText("hide");
         hide.setUserData("hide");
-        
+
         MA.setToggleGroup((pointerGroup));
-        SD.setToggleGroup((pointerGroup));
+
+        //FIX
+        //Ten przycisk nie powinien być w grupie z innymi!!!!!
+        //SD.setToggleGroup((pointerGroup));
         bollinger.setToggleGroup((pointerGroup));
         koperta.setToggleGroup((pointerGroup));
         EMA.setToggleGroup((pointerGroup));
         hide.setToggleGroup((pointerGroup));
-        
+
         pointerGroup.selectToggle(hide);
 
         pointerGroupPane.getChildren().addAll(MA, SD, bollinger, koperta, EMA, hide);
-        
+
         pointerGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
-                
                 System.out.println(new_toggle.toString());
-                
                 //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
                 lastPointerType = pointerType;
-                pointerType = (String)new_toggle.getUserData();
+                pointerType = (String) new_toggle.getUserData();
                 OnPointerChange();
             }
         });
+
+        SD.selectedProperty().addListener(new ChangeListener<Boolean>(){
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                OnSDPointer(newValue);
+            }
+        });
+        
+        
+        
         //----------------------------------------------------------------------
         
         mainPane.add(chartGroupPane, 0, 0);
@@ -229,7 +235,7 @@ public abstract class InvestorView {
 
         return mainPane;
     }
-    
+
     //Skróty dla enuma DataRange
     String getDataRangeShortName(DataRange range) {
         switch (range) {
@@ -244,8 +250,7 @@ public abstract class InvestorView {
         }
         return null;
     }
-    
-    
+
     //Zmiana zakresu dat
     protected void ChangeDataRange(DataRange range) {
         selectedRange = range;
@@ -254,6 +259,8 @@ public abstract class InvestorView {
 
     //Metoda wywoływana w klasach pochodnych po zmianie zakresu dat
     protected abstract void OnDataRangeChanged();
-    protected abstract void OnPointerChange();
 
+    protected abstract void OnPointerChange();
+    
+    protected abstract void OnSDPointer(boolean action);
 }

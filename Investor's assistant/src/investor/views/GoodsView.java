@@ -43,6 +43,8 @@ public class GoodsView extends InvestorView {
     private LineChart lineChartSD;
     private TableView table;
 
+    private Index[] lastData;
+
     public void InitView() {
         selectedRange = DataRange.THREEMONTH;
         pane = new VBox();
@@ -67,116 +69,15 @@ public class GoodsView extends InvestorView {
                     selectedIndex = rowData;
                     //System.out.println(rowData);
                     try {
-                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
-                        System.out.println(data.length);
+                        lastData = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
+                        System.out.println(lastData.length);
 
                         lineChart.getData().clear();
-                        LinearChartManager.addSeries(lineChart, data);
-                        OnPointerChange();
+                        LinearChartManager.addSeries(lineChart, lastData);
 
-                    } catch (Exception ex) {
-                        System.out.println("Error while downloading indicise " + ex.toString());
-                    }
-                }
-            });
-            return row;
-        });
-
-        //table.setItems(initRows());
-        table.setEditable(false);
-
-        VBox vBox = (VBox) pane;
-
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(lineChart);
-        borderPane.setRight(addMenuButtons());
-
-        vBox.getChildren().add(table);
-        vBox.getChildren().add(borderPane);
-    }
-    
-    public void ChangeViewSD() {
-        pane = new VBox();
-        lineChart = LinearChartManager.linear();
-        lineChart.setTitle("");
-        lineChartSD = LinearChartManager.linear();
-        lineChartSD.setTitle("SD");
-        lineChartSD.setMaxHeight(250);
-
-        table = new TableView();
-
-        try {
-            table.getItems().addAll(NetworkManager.show(DataType.SPOL));
-        } catch (Exception e) {
-            System.out.println("Something went wrong when populating market indicisies view");
-        }
-
-        table.getColumns().addAll(initColumns());
-
-        table.setRowFactory(tv -> {
-            TableRow<Index> row = new TableRow<Index>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    Index rowData = row.getItem();
-                    selectedIndex = rowData;
-                    //System.out.println(rowData);
-                    try {
-                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
-                        System.out.println(data.length);
-
-                        lineChart.getData().clear();
-                        LinearChartManager.addSeries(lineChart, data);
-
-                    } catch (Exception ex) {
-                        System.out.println("Error while downloading indicise " + ex.toString());
-                    }
-                }
-            });
-            return row;
-        });
-
-        //table.setItems(initRows());
-        table.setEditable(false);
-
-        VBox vBox = (VBox) pane;
-
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(lineChart);
-        borderPane.setBottom(lineChartSD);
-        borderPane.setRight(addMenuButtons());
-
-        vBox.getChildren().add(table);
-        vBox.getChildren().add(borderPane);
-    }
-        
-        public void ChangeView() {
-        pane = new VBox();
-        lineChart = LinearChartManager.linear();
-        lineChart.setTitle("");
-
-        table = new TableView();
-
-        try {
-            table.getItems().addAll(NetworkManager.show(DataType.SPOL));
-        } catch (Exception e) {
-            System.out.println("Something went wrong when populating market indicisies view");
-        }
-
-        table.getColumns().addAll(initColumns());
-
-        table.setRowFactory(tv -> {
-            TableRow<Index> row = new TableRow<Index>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    Index rowData = row.getItem();
-                    selectedIndex = rowData;
-                    //System.out.println(rowData);
-                    try {
-                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
-                        System.out.println(data.length);
-
-                        lineChart.getData().clear();
-                        LinearChartManager.addSeries(lineChart, data);
+                        if (pointerType != "hide") {
+                            OnPointerChange();
+                        }
 
                     } catch (Exception ex) {
                         System.out.println("Error while downloading indicise " + ex.toString());
@@ -199,6 +100,109 @@ public class GoodsView extends InvestorView {
         vBox.getChildren().add(borderPane);
     }
 
+//    public void ChangeViewSD() {
+//        pane = new VBox();
+//        lineChart = LinearChartManager.linear();
+//        lineChart.setTitle("");
+//        lineChartSD = LinearChartManager.linear();
+//        lineChartSD.setTitle("SD");
+//        lineChartSD.setMaxHeight(250);
+//
+//        table = new TableView();
+//
+//        try {
+//            table.getItems().addAll(NetworkManager.show(DataType.SPOL));
+//        } catch (Exception e) {
+//            System.out.println("Something went wrong when populating market indicisies view");
+//        }
+//
+//        table.getColumns().addAll(initColumns());
+//
+//        table.setRowFactory(tv -> {
+//            TableRow<Index> row = new TableRow<Index>();
+//            row.setOnMouseClicked(event -> {
+//                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+//                    Index rowData = row.getItem();
+//                    selectedIndex = rowData;
+//                    //System.out.println(rowData);
+//                    try {
+//                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
+//                        System.out.println(data.length);
+//
+//                        lineChart.getData().clear();
+//                        LinearChartManager.addSeries(lineChart, data);
+//
+//                    } catch (Exception ex) {
+//                        System.out.println("Error while downloading indicise " + ex.toString());
+//                    }
+//                }
+//            });
+//            return row;
+//        });
+//
+//        //table.setItems(initRows());
+//        table.setEditable(false);
+//
+//        VBox vBox = (VBox) pane;
+//
+//        BorderPane borderPane = new BorderPane();
+//        borderPane.setCenter(lineChart);
+//        borderPane.setBottom(lineChartSD);
+//        borderPane.setRight(addMenuButtons());
+//
+//        vBox.getChildren().add(table);
+//        vBox.getChildren().add(borderPane);
+//    }
+//        
+//        public void ChangeView() {
+//        pane = new VBox();
+//        lineChart = LinearChartManager.linear();
+//        lineChart.setTitle("");
+//
+//        table = new TableView();
+//
+//        try {
+//            table.getItems().addAll(NetworkManager.show(DataType.SPOL));
+//        } catch (Exception e) {
+//            System.out.println("Something went wrong when populating market indicisies view");
+//        }
+//
+//        table.getColumns().addAll(initColumns());
+//
+//        table.setRowFactory(tv -> {
+//            TableRow<Index> row = new TableRow<Index>();
+//            row.setOnMouseClicked(event -> {
+//                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+//                    Index rowData = row.getItem();
+//                    selectedIndex = rowData;
+//                    //System.out.println(rowData);
+//                    try {
+//                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
+//                        System.out.println(data.length);
+//
+//                        lineChart.getData().clear();
+//                        LinearChartManager.addSeries(lineChart, data);
+//
+//                    } catch (Exception ex) {
+//                        System.out.println("Error while downloading indicise " + ex.toString());
+//                    }
+//                }
+//            });
+//            return row;
+//        });
+//
+//        //table.setItems(initRows());
+//        table.setEditable(false);
+//
+//        VBox vBox = (VBox) pane;
+//
+//        BorderPane borderPane = new BorderPane();
+//        borderPane.setCenter(lineChart);
+//        borderPane.setRight(addMenuButtons());
+//
+//        vBox.getChildren().add(table);
+//        vBox.getChildren().add(borderPane);
+//    }
     public LineChart getChart() {
         return lineChart;
     }
@@ -209,95 +213,125 @@ public class GoodsView extends InvestorView {
 
     protected void OnDataRangeChanged() {
         if (selectedIndex != null) {
-            Index[] data = null;
             try {
-                data = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
-            } catch (Exception ex) {
-                Logger.getLogger(CompaniesView.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                lastData = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
+                lineChart.getData().clear();
 
-            lineChart.getData().clear();
-            LinearChartManager.addSeries(lineChart, data);
+                if (pointerType != "hide") {
+                    OnPointerChange();
+                    if(sdChartShowed)
+                        OnSDPointer(true);
+                } else {
+                    LinearChartManager.addSeries(lineChart, lastData);
+                }
+
+            } catch (Exception ex) {
+                Logger.getLogger(GoodsView.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
-    
+
     protected void OnPointerChange() {
-            Index[] dataPointer = null;
-            double[] data1;
-            double[][] data2;
-            Indicators ptr = new Indicators();
-            int size;
-            try {
-                dataPointer = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
-            } catch (Exception ex) {
-                Logger.getLogger(CompaniesView.class.getName()).log(Level.SEVERE, null, ex);
+        if (lastData == null) {
+            System.out.println("Original data is null, downloading it");
+            OnDataRangeChanged();
+        }
+
+        Index[] dataPointer = lastData.clone();
+
+        double[] data1;
+        double[][] data2;
+        int size = lastData.length;
+
+        if (lastPointerType == "SD" && pointerType != "SD") {
+            //TODO: disable sd chart
+            //ChangeView();
+        }
+
+        lineChart.getData().clear();
+        LinearChartManager.addSeries(lineChart, lastData);
+
+        switch (pointerType) {
+            case "MA":
+                data1 = Indicators.MA(dataPointer, size);
+                for (int i = 0; i < size; i++) {
+                    dataPointer[i].setClose_val(data1[i]);
+                }
+                LinearChartManager.addSeries(lineChart, dataPointer);
+                break;
+            case "bollinger":
+                data2 = Indicators.Bollinger(dataPointer, size, K);
+
+                for (int i = 0; i < size; i++) {
+                    dataPointer[i].setClose_val(data2[0][i]);
+                }
+                LinearChartManager.addSeries(lineChart, dataPointer);
+                for (int i = 0; i < size; i++) {
+                    dataPointer[i].setClose_val(data2[1][i]);
+                }
+                LinearChartManager.addSeries(lineChart, dataPointer);
+                for (int i = 0; i < size; i++) {
+                    dataPointer[i].setClose_val(data2[2][i]);
+                }
+                LinearChartManager.addSeries(lineChart, dataPointer);
+                break;
+
+            case "koperta":
+                data2 = Indicators.Bollinger(dataPointer, size, P);
+                for (int i = 0; i < size; i++) {
+                    dataPointer[i].setClose_val(data2[0][i]);
+                }
+                LinearChartManager.addSeries(lineChart, dataPointer);
+                for (int i = 0; i < size; i++) {
+                    dataPointer[i].setClose_val(data2[1][i]);
+                }
+                LinearChartManager.addSeries(lineChart, dataPointer);
+                break;
+            case "EMA":
+                double alpha = 2 / (size + 1);
+                data1 = Indicators.EMA(dataPointer, size, alpha);
+                for (int i = 0; i < size; i++) {
+                    dataPointer[i].setClose_val(data1[i]);
+                }
+                LinearChartManager.addSeries(lineChart, dataPointer);
+                break;
+            case "hide":
+                break;
+            default:
+                break;
+        }
+    }
+
+    protected void OnSDPointer(boolean action) {
+        sdChartShowed = action;
+        
+        //true for showing sd chart
+        if (action) {
+            if (lastData == null) {
+                System.out.println("Original data is null, downloading it");
+                OnDataRangeChanged();
             }
-            
-            size = dataPointer.length;
-            
-            switch (pointerType) {
-                case "MA": if (lastPointerType == "SD")
-                                ChangeView();
-                           data1 = ptr.MA(dataPointer, size);
-                           for(int i=0; i < size; i++){
-                                dataPointer[i].setClose_val(data1[i]);
-                           }
-                           OnDataRangeChanged();
-                           LinearChartManager.addSeries(lineChart, dataPointer);
-                           break;
-                case "SD": ChangeViewSD();
-                           data1 = ptr.SD(dataPointer, size);
-                           for(int i=0; i < size; i++){
-                                dataPointer[i].setClose_val(data1[i]);
-                           }
-                           OnDataRangeChanged();
-                           LinearChartManager.addSeries(lineChartSD, dataPointer);
-                           break;
-                case "bollinger": if (lastPointerType == "SD")
-                                ChangeView();
-                            data2 = ptr.Bollinger(dataPointer, size, K);
-                           for(int i=0; i < size; i++){
-                                dataPointer[i].setClose_val(data2[0][i]);
-                           }
-                           OnDataRangeChanged();
-                           LinearChartManager.addSeries(lineChart, dataPointer);
-                           for(int i=0; i < size; i++){
-                                dataPointer[i].setClose_val(data2[1][i]);
-                           }
-                           LinearChartManager.addSeries(lineChart, dataPointer);
-                           for(int i=0; i < size; i++){
-                                dataPointer[i].setClose_val(data2[2][i]);
-                           }
-                           LinearChartManager.addSeries(lineChart, dataPointer);
-                           break;
-                case "koperta": if (lastPointerType == "SD")
-                                ChangeView();
-                            data2 = ptr.Bollinger(dataPointer, size, P);
-                           for(int i=0; i < size; i++){
-                                dataPointer[i].setClose_val(data2[0][i]);
-                           }
-                           OnDataRangeChanged();
-                           LinearChartManager.addSeries(lineChart, dataPointer);
-                           for(int i=0; i < size; i++){
-                                dataPointer[i].setClose_val(data2[1][i]);
-                           }
-                           LinearChartManager.addSeries(lineChart, dataPointer);
-                           break;
-                case "EMA":if (lastPointerType == "SD")
-                                ChangeView();
-                            double alpha = 2/(size + 1);
-                           data1 = ptr.EMA(dataPointer, size, alpha);
-                           for(int i=0; i < size; i++){
-                                dataPointer[i].setClose_val(data1[i]);
-                           }
-                           OnDataRangeChanged();
-                           LinearChartManager.addSeries(lineChart, dataPointer);
-                           break;
-                case "hide": if (lastPointerType == "SD")
-                                ChangeView();
-                            OnDataRangeChanged();
-                             break;
-                default  : break;
+
+            Index[] dataPointer = lastData.clone();
+
+            lineChartSD = LinearChartManager.linear();
+            lineChartSD.setTitle("SD");
+            lineChartSD.setMaxHeight(250);
+
+            int size = lastData.length;
+
+            double[] data1 = Indicators.SD(dataPointer, size);
+            for (int i = 0; i < size; i++) {
+                dataPointer[i].setClose_val(data1[i]);
             }
+
+            LinearChartManager.addSeries(lineChartSD, dataPointer);
+            BorderPane bPane = (BorderPane) pane.getChildren().get(1);
+            bPane.setBottom(lineChartSD);
+        } else { //let's hide it
+            lineChartSD = null;
+            BorderPane bPane = (BorderPane) pane.getChildren().get(1);
+            bPane.setBottom(null);
+        }
     }
 }

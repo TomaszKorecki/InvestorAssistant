@@ -322,4 +322,11 @@ public class MarketIndicisesView extends InvestorView {
                 default  : break;
             }
     }
+    
+    protected void OnSDPointer(boolean action){
+        
+        
+        
+        
+    }
 }
