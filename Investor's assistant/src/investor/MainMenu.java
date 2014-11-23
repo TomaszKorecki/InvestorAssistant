@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import investor.data.DataRange;
 import investor.data.Index;
 import investor.network.DataType;
-import investor.network.IndexType;
+//import investor.network.IndexType;
 import investor.network.NetworkManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
