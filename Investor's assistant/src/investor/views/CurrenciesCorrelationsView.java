@@ -104,10 +104,15 @@ public class CurrenciesCorrelationsView extends InvestorView {
 
     }
     
+
     protected void OnSDPointer(boolean action){
+    
+    }
         
         
         
-        
+
+    protected void OnChartTypeChanged(String chartType) {
+
     }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
+import javafx.scene.chart.Chart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
@@ -36,6 +37,9 @@ public abstract class InvestorView {
 
     //Wybrany zakres danych dla danego widoku
     protected DataRange selectedRange;
+    
+    //Wybrany typ wykresu
+    protected String selectedChart;
 
     //rodzaj wybranego wskaznika
     protected String pointerType;
@@ -111,9 +115,11 @@ public abstract class InvestorView {
 
         ToggleButton line = new ToggleButton();
         line.setGraphic(new ImageView(image1));
+        line.setUserData("line");
 
         ToggleButton candle = new ToggleButton();
         candle.setGraphic(new ImageView(image2));
+        candle.setUserData("candle");
 
         line.setToggleGroup((chartGroup));
         candle.setToggleGroup((chartGroup));
@@ -121,6 +127,7 @@ public abstract class InvestorView {
         chartGroupPane.getChildren().addAll(line, candle);
 
         //Na wstepie wybrany zostaje wykres liniowy
+        selectedChart = "line";
         chartGroup.selectToggle(line);
         ////////////////////
 
@@ -146,11 +153,28 @@ public abstract class InvestorView {
         //W klasach dziedziczących po InvestorView wywoływana jest abstrakcyjna metoda OnDataRangeChanged
         rangeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
-
+                if(new_toggle==null) {
+                    toggle.setSelected(true);
+                    return;
+                }
                 System.out.println(new_toggle.toString());
 
                 selectedRange = DataRange.valueOf((String) new_toggle.getUserData());
                 OnDataRangeChanged();
+            }
+        });      
+        chartGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
+
+                 if(new_toggle==null) {
+                    toggle.setSelected(true);
+                    return;
+                }
+                //System.out.println(DataRange.valueOf((String)new_toggle.getUserData()));
+                //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
+                selectedChart = new_toggle.getUserData().toString();
+                //System.out.println("!!!!!!!!!!!!!!!"+selectedChart);
+                OnChartTypeChanged(selectedChart);
             }
         });
 
@@ -263,4 +287,6 @@ public abstract class InvestorView {
     protected abstract void OnPointerChange();
     
     protected abstract void OnSDPointer(boolean action);
+
+    protected abstract void OnChartTypeChanged(String chartType);
 }

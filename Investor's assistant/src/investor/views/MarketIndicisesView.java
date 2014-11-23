@@ -5,6 +5,7 @@
  */
 package investor.views;
 
+import investor.charts.CandleChart;
 import investor.charts.LinearChartManager;
 import investor.data.DataRange;
 import investor.data.Index;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Pos;
+import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableColumn;
@@ -37,9 +39,12 @@ public class MarketIndicisesView extends InvestorView {
     
     //TODO:
     //Tu powinny się jeszcze znaleźć referencję do wykresu świecowego i ewentualnie dla drugiego liniowego dla wskaźnika SD
+private CandleChart candleChart;
+    private CandleChart.CandleStickChart chart;
     private LineChart lineChart;
     private LineChart lineChartSD;
     private TableView table;
+BorderPane borderPane;
 
     //Metoda generująca wykres
     public void InitView() {
@@ -52,7 +57,7 @@ public class MarketIndicisesView extends InvestorView {
         //Poczatkowo zakres dat to 3M
         selectedRange = DataRange.THREEMONTH;
         
-        
+        selectedChart = "line";
         //Stworzenie tabelki
         table = new TableView();
 
@@ -83,10 +88,22 @@ public class MarketIndicisesView extends InvestorView {
                         Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
                         System.out.println(data.length);
 
+if(selectedChart.equals("line")) {
                         lineChart.getData().clear();
                         LinearChartManager.addSeries(lineChart, data);
                         OnPointerChange();
+} else {
+                               CandleChart.generateData(data);
+            candleChart = new CandleChart(); 
+            CandleChart.CandleStickChart chart = candleChart.createChart();
 
+            pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
+            
+            //if(borderPane.getChildren().contains(lineChart)) {
+                borderPane.getChildren().remove(lineChart);
+                borderPane.setCenter(chart);
+            //}
+                           }
                     } catch (Exception ex) {
                         System.out.println("Error while downloading indicise " + ex.toString());
                     }
@@ -101,7 +118,7 @@ public class MarketIndicisesView extends InvestorView {
         VBox vBox = (VBox) pane;
         
         //Panel dla wykresu i przycisków konfiguracyjnych
-        BorderPane borderPane = new BorderPane();
+        borderPane = new BorderPane();
         
         //Po środku wykres
         borderPane.setCenter(lineChart);
@@ -230,7 +247,6 @@ public class MarketIndicisesView extends InvestorView {
     //Powinna działać na dwa różne sposoby, w zależności od pokazanego wykresu
     protected void OnDataRangeChanged() {
         if (selectedIndex != null) {
-            System.out.println("Preparing for downloading for " + selectedRange.toString());
             Index[] data = null;
             try {
                 data = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
@@ -238,8 +254,169 @@ public class MarketIndicisesView extends InvestorView {
                 Logger.getLogger(CompaniesView.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            if(selectedChart.equals("line")) {
+
+
+
+
+
+
+
+
+
+
+
+                lineChart.getData().clear();
+                LinearChartManager.addSeries(lineChart, data);
+            } else {
+                CandleChart.generateData(data);
+            candleChart = new CandleChart(); 
+            CandleChart.CandleStickChart chart = candleChart.createChart();
+
+            pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
+            
+            //if(borderPane.getChildren().contains(lineChart)) {
+                borderPane.getChildren().remove(lineChart);
+                borderPane.setCenter(chart);
+            //}
+            }
+        }
+    }
+
+protected void OnChartTypeChanged(String chartType) {
+  
+            if(chartType.equals("line")) {
+        if (selectedIndex != null) {
+            System.out.println("Preparing for downloading for " + selectedRange.toString());
+            Index[] data = null;
+            try {
+                data = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
+            } catch (Exception ex) {
+                Logger.getLogger(CompaniesView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            lineChart = LinearChartManager.linear();
+            lineChart.setTitle("");
+        
             lineChart.getData().clear();
             LinearChartManager.addSeries(lineChart, data);
+            
+            //if(borderPane.getChildren().contains(chart)) {
+                borderPane.getChildren().remove(chart);
+                borderPane.setCenter(lineChart);
+            //}
+                
+                selectedChart = chartType;
+        }
+        }
+        
+        if(chartType.equals("candle")) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (selectedIndex != null) {
+
+            Index[] data = null;
+            try {
+                data = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
+            } catch (Exception ex) {
+                Logger.getLogger(CompaniesView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            CandleChart.generateData(data);
+            
+            candleChart = new CandleChart();
+            
+            CandleChart.CandleStickChart chart = candleChart.createChart();
+            
+            
+            pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
+            
+            //if(borderPane.getChildren().contains(lineChart)) {
+                borderPane.getChildren().remove(lineChart);
+                borderPane.setCenter(chart);
+            //}
+                
+                selectedChart = chartType;
+        }
         }
     }
 

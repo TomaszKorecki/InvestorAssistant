@@ -5,6 +5,7 @@
  */
 package investor.views;
 
+import investor.charts.CandleChart;
 import investor.charts.LinearChartManager;
 import investor.data.DataRange;
 import investor.data.Index;
@@ -28,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.chart.Chart;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.BorderPane;
@@ -42,11 +44,15 @@ public class GoodsView extends InvestorView {
     private LineChart lineChart;
     private LineChart lineChartSD;
     private TableView table;
+    private CandleChart candleChart;
+    private CandleChart.CandleStickChart chart;
+    BorderPane borderPane;
 
     private Index[] lastData;
 
     public void InitView() {
         selectedRange = DataRange.THREEMONTH;
+        selectedChart = "line";
         pane = new VBox();
         lineChart = LinearChartManager.linear();
         lineChart.setTitle("");
@@ -72,11 +78,20 @@ public class GoodsView extends InvestorView {
                         lastData = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
                         System.out.println(lastData.length);
 
-                        lineChart.getData().clear();
-                        LinearChartManager.addSeries(lineChart, lastData);
+                        if (selectedChart.equals("line")) {
+                            lineChart.getData().clear();
+                            LinearChartManager.addSeries(lineChart, lastData);
 
-                        if (pointerType != "hide") {
-                            OnPointerChange();
+                            if (pointerType != "hide") {
+                                OnPointerChange();
+                            }
+                        } else {
+                            CandleChart.generateData(lastData);
+                            candleChart = new CandleChart();
+                            
+                            CandleChart.CandleStickChart chart = candleChart.createChart();
+                            pane.getStylesheets().add("resources/css/CandleStickChart.css");
+                            borderPane.setCenter(chart);
                         }
 
                     } catch (Exception ex) {
@@ -92,7 +107,7 @@ public class GoodsView extends InvestorView {
 
         VBox vBox = (VBox) pane;
 
-        BorderPane borderPane = new BorderPane();
+        borderPane = new BorderPane();
         borderPane.setCenter(lineChart);
         borderPane.setRight(addMenuButtons());
 
@@ -219,8 +234,9 @@ public class GoodsView extends InvestorView {
 
                 if (pointerType != "hide") {
                     OnPointerChange();
-                    if(sdChartShowed)
+                    if (sdChartShowed) {
                         OnSDPointer(true);
+                    }
                 } else {
                     LinearChartManager.addSeries(lineChart, lastData);
                 }
@@ -242,11 +258,6 @@ public class GoodsView extends InvestorView {
         double[] data1;
         double[][] data2;
         int size = lastData.length;
-
-        if (lastPointerType == "SD" && pointerType != "SD") {
-            //TODO: disable sd chart
-            //ChangeView();
-        }
 
         lineChart.getData().clear();
         LinearChartManager.addSeries(lineChart, lastData);
@@ -304,7 +315,6 @@ public class GoodsView extends InvestorView {
 
     protected void OnSDPointer(boolean action) {
         sdChartShowed = action;
-        
         //true for showing sd chart
         if (action) {
             if (lastData == null) {
@@ -332,6 +342,45 @@ public class GoodsView extends InvestorView {
             lineChartSD = null;
             BorderPane bPane = (BorderPane) pane.getChildren().get(1);
             bPane.setBottom(null);
+        }
+    }
+
+//    if(selectedChart.equals ("line")) {
+//
+//                lineChart.getData().clear();
+//        LinearChartManager.addSeries(lineChart, data);
+//    }
+//
+//    
+//        else {
+//                CandleChart.generateData(data);
+//        candleChart = new CandleChart();
+//        CandleChart.CandleStickChart chart = candleChart.createChart();
+//
+//        pane.getStylesheets().add("resources/css/CandleStickChart.css");
+//
+//        //if(borderPane.getChildren().contains(lineChart)) {
+//        borderPane.getChildren().remove(lineChart);
+//        borderPane.setCenter(chart);
+//        //}
+//    }
+//}
+//}
+    protected void OnChartTypeChanged(String chartType) {
+        selectedChart = chartType;
+        if (lastData == null) {
+            System.out.println("Original data is null, downloading it");
+            OnDataRangeChanged();
+        }
+
+        if (chartType.equals("line")) {
+            borderPane.setCenter(lineChart);
+        } else if (chartType.equals("candle")) {
+            candleChart = new CandleChart();
+            CandleChart.CandleStickChart chart = candleChart.createChart();
+            pane.getStylesheets().add("resources/css/CandleStickChart.css");
+            borderPane.setCenter(chart);
+            selectedChart = chartType;
         }
     }
 }
