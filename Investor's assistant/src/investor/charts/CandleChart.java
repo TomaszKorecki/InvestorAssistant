@@ -92,11 +92,8 @@ public class CandleChart {
     //metoda przyjmująca tablicę indexów, generująca dane dla wykresu
     public static void generateData(Index[] indexData) {
         data = new double[indexData.length][6];
-        for (int i = 0; i < indexData.length; i++) {     
-            String day = indexData[i].getDay().substring(8,10);
-            
-            data[i][0] = i+1;
-            //data[i][0] = Double.parseDouble(day);            
+        for (int i = 0; i < indexData.length; i++) {
+            data[i][0] = Double.parseDouble(indexData[i].getDay());
             data[i][1] = indexData[i].getOpen_val();
             data[i][2] = indexData[i].getClose_val();
             data[i][3] = indexData[i].getMin_val();
@@ -111,10 +108,9 @@ public class CandleChart {
 //        final NumberAxis xAxis = new NumberAxis(0,32,1);
         xAxis.setMinorTickCount(0);
         final NumberAxis yAxis = new NumberAxis();
-        yAxis.setForceZeroInRange(false);
         final CandleStickChart bc = new CandleStickChart(xAxis,yAxis);
         // setup chart
-        //bc.setTitle("Custom Candle Stick Chart");
+        bc.setTitle("Custom Candle Stick Chart");
         xAxis.setLabel("Day");
         yAxis.setLabel("Price");
         // add starting data
@@ -202,7 +198,7 @@ public class CandleChart {
                         double candleWidth = -1;
                         if (getXAxis() instanceof NumberAxis) {
                             NumberAxis xa = (NumberAxis) getXAxis();
-                            candleWidth = xa.getDisplayPosition(xa.getTickUnit()) * 0.40; // use 90% width between ticks
+                            candleWidth = xa.getDisplayPosition(xa.getTickUnit()) * 0.90; // use 90% width between ticks
                         }
                         // update candle
                         candle.update(close - y, high - y, low - y, candleWidth);
@@ -280,10 +276,10 @@ public class CandleChart {
                 }
             }
             // create series path
-//            Path seriesPath = new Path();
-//            seriesPath.getStyleClass().setAll("candlestick-average-line", "series" + seriesIndex);
-//            series.setNode(seriesPath);
-//            getPlotChildren().add(seriesPath);
+            Path seriesPath = new Path();
+            seriesPath.getStyleClass().setAll("candlestick-average-line", "series" + seriesIndex);
+            series.setNode(seriesPath);
+            getPlotChildren().add(seriesPath);
         }
 
         @Override protected void seriesRemoved(XYChart.Series<Number, Number> series) {

@@ -12,7 +12,6 @@ import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
-import javafx.scene.chart.Chart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
@@ -38,7 +37,17 @@ public abstract class InvestorView {
     //Wybrany zakres danych dla danego widoku
     protected DataRange selectedRange;
     
-    protected String selectedChart;
+    //rodzaj wybranego wskaznika
+    protected String pointerType;
+    
+    //rodzaj ostatniego wybranego wskaznika
+    protected String lastPointerType = "hide";
+    
+    //współczynnik K dla metody bollingera
+    protected static int K = 2;
+    
+    //współczynnik P dla metody koperty
+    protected static int P = 5;
     
     //Wybrany index dla danego widoku, może być nullem jeśli jeszcze nic nie wybraliśmy
     protected Index selectedIndex;
@@ -102,11 +111,9 @@ public abstract class InvestorView {
 
         ToggleButton line = new ToggleButton();
         line.setGraphic(new ImageView(image1));
-        line.setUserData("line");
 
         ToggleButton candle = new ToggleButton();
         candle.setGraphic(new ImageView(image2));
-        candle.setUserData("candle");
 
         line.setToggleGroup((chartGroup));
         candle.setToggleGroup((chartGroup));
@@ -114,7 +121,6 @@ public abstract class InvestorView {
         chartGroupPane.getChildren().addAll(line, candle);
         
         //Na wstepie wybrany zostaje wykres liniowy
-        selectedChart = "line";
         chartGroup.selectToggle(line);
         ////////////////////
         
@@ -142,11 +148,6 @@ public abstract class InvestorView {
         rangeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
                 
-                if(new_toggle==null) {
-                    toggle.setSelected(true);
-                    return;
-                }
-                
                 System.out.println(new_toggle.toString());
                 
                 selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
@@ -154,29 +155,77 @@ public abstract class InvestorView {
             }
         });
         
-        chartGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
-                
-                 if(new_toggle==null) {
-                    toggle.setSelected(true);
-                    return;
-                }
-
-                //System.out.println(DataRange.valueOf((String)new_toggle.getUserData()));
-                //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
-                selectedChart = new_toggle.getUserData().toString();
-                System.out.println("!!!!!!!!!!!!!!!"+selectedChart);
-                OnChartTypeChanged(selectedChart);
-            }
-        });
-        
         //TODO
         //Tu trzeba dodać jeszcze toogle buttony do obsługi wskaźników, proponuję dodać również prcysisk do ukrywania wykresu ze wskaźnikiem
         
+        //----------------------------------------------------------------------
+        //Buttony do wskaźników
+        //----------------------------------------------------------------------
         
+        FlowPane pointerGroupPane = new FlowPane();
+        pointerGroupPane.setAlignment(Pos.CENTER);
+        pointerGroupPane.setPrefWrapLength(70);
+        
+        //Stworzenie przycisków do wyboru wskaźników
+        final ToggleGroup pointerGroup = new ToggleGroup();
 
+        ToggleButton MA = new ToggleButton();
+        MA.setMinSize(48, 48);
+        MA.setText("MA");
+        MA.setUserData("MA");
+
+        ToggleButton SD = new ToggleButton();
+        SD.setMinSize(48, 48);
+        SD.setText("SD");
+        SD.setUserData("SD");
+        
+        ToggleButton bollinger = new ToggleButton();
+        bollinger.setMinSize(48, 48);
+        bollinger.setText("Bollinger");
+        bollinger.setUserData("bollinger");
+        
+        ToggleButton koperta = new ToggleButton();
+        koperta.setMinSize(48, 48);
+        koperta.setText("Koperta");
+        koperta.setUserData("koperta");
+        
+        ToggleButton EMA = new ToggleButton();
+        EMA.setMinSize(48, 48);
+        EMA.setText("EMA");
+        EMA.setUserData("EMA");
+        
+        ToggleButton hide = new ToggleButton();
+        hide.setMinSize(48, 48);
+        hide.setText("hide");
+        hide.setUserData("hide");
+        
+        MA.setToggleGroup((pointerGroup));
+        SD.setToggleGroup((pointerGroup));
+        bollinger.setToggleGroup((pointerGroup));
+        koperta.setToggleGroup((pointerGroup));
+        EMA.setToggleGroup((pointerGroup));
+        hide.setToggleGroup((pointerGroup));
+        
+        pointerGroup.selectToggle(hide);
+
+        pointerGroupPane.getChildren().addAll(MA, SD, bollinger, koperta, EMA, hide);
+        
+        pointerGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
+                
+                System.out.println(new_toggle.toString());
+                
+                //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
+                lastPointerType = pointerType;
+                pointerType = (String)new_toggle.getUserData();
+                OnPointerChange();
+            }
+        });
+        //----------------------------------------------------------------------
+        
         mainPane.add(chartGroupPane, 0, 0);
         mainPane.add(flowPane, 0, 1);
+        mainPane.add(pointerGroupPane, 0, 2);
 
         return mainPane;
     }
@@ -205,6 +254,6 @@ public abstract class InvestorView {
 
     //Metoda wywoływana w klasach pochodnych po zmianie zakresu dat
     protected abstract void OnDataRangeChanged();
+    protected abstract void OnPointerChange();
 
-    protected abstract void OnChartTypeChanged(String chartType);
 }

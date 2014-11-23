@@ -9,8 +9,11 @@ import investor.charts.CandleChart;
 import investor.charts.CandleChart.CandleStickChart;
 import investor.charts.LinearChartManager;
 import investor.data.Index;
+import investor.indicators.Indicators;
+import investor.network.NetworkManager;
 import java.util.Date;
-import javafx.scene.chart.Chart;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.BorderPane;
@@ -78,14 +81,14 @@ public class CurrenciesCorrelationsView extends InvestorView {
         data[0] = index;
         data[1] = index1;
         
-            //CandleChart.generateData(data);
+            CandleChart.generateData(data);
             
-//            CandleChart candle = new CandleChart();
-//            CandleStickChart chart = candle.createChart();
-//            
-//            pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
-//            
-//            bPane.setCenter(chart);
+            CandleChart candle = new CandleChart();
+            CandleStickChart chart = candle.createChart();
+            
+            pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
+            
+            bPane.setCenter(chart);
     }
     
     public LineChart GetChart(){
@@ -97,7 +100,7 @@ public class CurrenciesCorrelationsView extends InvestorView {
         
     }
     
-    protected void OnChartTypeChanged(String chartType) {
-        
+    protected void OnPointerChange() {
+
     }
 }
