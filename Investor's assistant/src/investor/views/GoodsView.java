@@ -82,7 +82,7 @@ public class GoodsView extends InvestorView {
                             lineChart.getData().clear();
                             LinearChartManager.addSeries(lineChart, lastData);
 
-                            if (pointerType != "hide") {
+                            if (pointerType!=null && pointerType != "hide") {
                                 OnPointerChange();
                             }
                         } else {
@@ -115,109 +115,6 @@ public class GoodsView extends InvestorView {
         vBox.getChildren().add(borderPane);
     }
 
-//    public void ChangeViewSD() {
-//        pane = new VBox();
-//        lineChart = LinearChartManager.linear();
-//        lineChart.setTitle("");
-//        lineChartSD = LinearChartManager.linear();
-//        lineChartSD.setTitle("SD");
-//        lineChartSD.setMaxHeight(250);
-//
-//        table = new TableView();
-//
-//        try {
-//            table.getItems().addAll(NetworkManager.show(DataType.SPOL));
-//        } catch (Exception e) {
-//            System.out.println("Something went wrong when populating market indicisies view");
-//        }
-//
-//        table.getColumns().addAll(initColumns());
-//
-//        table.setRowFactory(tv -> {
-//            TableRow<Index> row = new TableRow<Index>();
-//            row.setOnMouseClicked(event -> {
-//                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-//                    Index rowData = row.getItem();
-//                    selectedIndex = rowData;
-//                    //System.out.println(rowData);
-//                    try {
-//                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
-//                        System.out.println(data.length);
-//
-//                        lineChart.getData().clear();
-//                        LinearChartManager.addSeries(lineChart, data);
-//
-//                    } catch (Exception ex) {
-//                        System.out.println("Error while downloading indicise " + ex.toString());
-//                    }
-//                }
-//            });
-//            return row;
-//        });
-//
-//        //table.setItems(initRows());
-//        table.setEditable(false);
-//
-//        VBox vBox = (VBox) pane;
-//
-//        BorderPane borderPane = new BorderPane();
-//        borderPane.setCenter(lineChart);
-//        borderPane.setBottom(lineChartSD);
-//        borderPane.setRight(addMenuButtons());
-//
-//        vBox.getChildren().add(table);
-//        vBox.getChildren().add(borderPane);
-//    }
-//        
-//        public void ChangeView() {
-//        pane = new VBox();
-//        lineChart = LinearChartManager.linear();
-//        lineChart.setTitle("");
-//
-//        table = new TableView();
-//
-//        try {
-//            table.getItems().addAll(NetworkManager.show(DataType.SPOL));
-//        } catch (Exception e) {
-//            System.out.println("Something went wrong when populating market indicisies view");
-//        }
-//
-//        table.getColumns().addAll(initColumns());
-//
-//        table.setRowFactory(tv -> {
-//            TableRow<Index> row = new TableRow<Index>();
-//            row.setOnMouseClicked(event -> {
-//                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-//                    Index rowData = row.getItem();
-//                    selectedIndex = rowData;
-//                    //System.out.println(rowData);
-//                    try {
-//                        Index[] data = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
-//                        System.out.println(data.length);
-//
-//                        lineChart.getData().clear();
-//                        LinearChartManager.addSeries(lineChart, data);
-//
-//                    } catch (Exception ex) {
-//                        System.out.println("Error while downloading indicise " + ex.toString());
-//                    }
-//                }
-//            });
-//            return row;
-//        });
-//
-//        //table.setItems(initRows());
-//        table.setEditable(false);
-//
-//        VBox vBox = (VBox) pane;
-//
-//        BorderPane borderPane = new BorderPane();
-//        borderPane.setCenter(lineChart);
-//        borderPane.setRight(addMenuButtons());
-//
-//        vBox.getChildren().add(table);
-//        vBox.getChildren().add(borderPane);
-//    }
     public LineChart getChart() {
         return lineChart;
     }
@@ -232,13 +129,20 @@ public class GoodsView extends InvestorView {
                 lastData = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
                 lineChart.getData().clear();
 
-                if (pointerType != "hide") {
+                if (pointerType!=null && !pointerType.equals("hide")) {
                     OnPointerChange();
                     if (sdChartShowed) {
                         OnSDPointer(true);
                     }
-                } else {
+                } else if(selectedChart.equals("line")){
                     LinearChartManager.addSeries(lineChart, lastData);
+                }
+                else {
+                    CandleChart.generateData(lastData);
+                    //candleChart = new CandleChart();
+                    chart = candleChart.createChart();
+                    //pane.getStylesheets().add("resources/css/CandleStickChart.css");
+                    borderPane.setCenter(chart);
                 }
 
             } catch (Exception ex) {
@@ -345,27 +249,6 @@ public class GoodsView extends InvestorView {
         }
     }
 
-//    if(selectedChart.equals ("line")) {
-//
-//                lineChart.getData().clear();
-//        LinearChartManager.addSeries(lineChart, data);
-//    }
-//
-//    
-//        else {
-//                CandleChart.generateData(data);
-//        candleChart = new CandleChart();
-//        CandleChart.CandleStickChart chart = candleChart.createChart();
-//
-//        pane.getStylesheets().add("resources/css/CandleStickChart.css");
-//
-//        //if(borderPane.getChildren().contains(lineChart)) {
-//        borderPane.getChildren().remove(lineChart);
-//        borderPane.setCenter(chart);
-//        //}
-//    }
-//}
-//}
     protected void OnChartTypeChanged(String chartType) {
         selectedChart = chartType;
         if (lastData == null) {
@@ -374,10 +257,13 @@ public class GoodsView extends InvestorView {
         }
 
         if (chartType.equals("line")) {
+            lineChart.getData().clear();
+            LinearChartManager.addSeries(lineChart, lastData);
             borderPane.setCenter(lineChart);
         } else if (chartType.equals("candle")) {
+            CandleChart.generateData(lastData);
             candleChart = new CandleChart();
-            CandleChart.CandleStickChart chart = candleChart.createChart();
+            chart = candleChart.createChart();
             pane.getStylesheets().add("resources/css/CandleStickChart.css");
             borderPane.setCenter(chart);
             selectedChart = chartType;
