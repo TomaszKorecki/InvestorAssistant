@@ -103,4 +103,7 @@ public class CurrenciesCorrelationsView extends InvestorView {
     protected void OnPointerChange() {
 
     }
+    
+    protected void OnChartTypeChanged(String chartType) {
+    }
 }
