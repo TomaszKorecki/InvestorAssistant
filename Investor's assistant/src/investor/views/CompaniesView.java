@@ -66,20 +66,21 @@ public class CompaniesView extends InvestorView {
                         lastData = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
                         System.out.println(lastData.length);
 
-                    if(selectedChart.equals("line")) {
-                        lineChart.getData().clear();
-                        LinearChartManager.addSeries(lineChart, lastData, selectedRange);
-                        if (pointerType!=null && pointerType != "hide") {
+                        if (selectedChart.equals("line")) {
+                            lineChart.getData().clear();
+                            lineChart.setTitle(rowData.getName());
+                            LinearChartManager.addSeries(lineChart, lastData, selectedRange);
+                            if (pointerType != null && pointerType != "hide") {
                                 OnPointerChange();
+                            }
+                        } else {
+                            CandleChart.generateData(lastData);
+                            candleChart = new CandleChart();
+                            CandleChart.CandleStickChart chart = candleChart.createChart();
+                            chart.setTitle(rowData.getName());
+                            pane.getStylesheets().add("resources/css/CandleStickChart.css");
+                            borderPane.setCenter(chart);
                         }
-                    } else {
-                        CandleChart.generateData(lastData);
-                        candleChart = new CandleChart(); 
-                        CandleChart.CandleStickChart chart = candleChart.createChart();
-
-                        pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
-                        borderPane.setCenter(chart);
-                    }
                     } catch (Exception ex) {
                         System.out.println("Error while downloading indicise " + ex.toString());
                     }
@@ -100,11 +101,11 @@ public class CompaniesView extends InvestorView {
         vBox.getChildren().add(table);
         vBox.getChildren().add(borderPane);
     }
- 
+
     public LineChart GetChart() {
         return lineChart;
     }
-    
+
     public TableView getTable() {
         return table;
     }
@@ -115,15 +116,14 @@ public class CompaniesView extends InvestorView {
                 lastData = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
                 lineChart.getData().clear();
 
-                if (pointerType!=null && !pointerType.equals("hide")) {
+                if (pointerType != null && !pointerType.equals("hide")) {
                     OnPointerChange();
                     if (sdChartShowed) {
                         OnSDPointer(true);
                     }
-                } else if(selectedChart.equals("line")){
+                } else if (selectedChart.equals("line")) {
                     LinearChartManager.addSeries(lineChart, lastData, selectedRange);
-                }
-                else {
+                } else {
                     CandleChart.generateData(lastData);
                     //candleChart = new CandleChart();
                     chart = candleChart.createChart();
@@ -136,8 +136,8 @@ public class CompaniesView extends InvestorView {
             }
         }
     }
-    
-  protected void OnChartTypeChanged(String chartType) {
+
+    protected void OnChartTypeChanged(String chartType) {
         selectedChart = chartType;
         if (lastData == null) {
             System.out.println("Original data is null, downloading it");
@@ -153,6 +153,7 @@ public class CompaniesView extends InvestorView {
             CandleChart.generateData(lastData);
             candleChart = new CandleChart();
             chart = candleChart.createChart();
+            chart.setTitle(selectedIndex.getName());
             pane.getStylesheets().add("resources/css/CandleStickChart.css");
             borderPane.setCenter(chart);
             selectedChart = chartType;
@@ -228,7 +229,7 @@ public class CompaniesView extends InvestorView {
                 break;
         }
     }
-    
+
     protected void OnSDPointer(boolean action) {
         sdChartShowed = action;
         //true for showing sd chart

@@ -81,15 +81,16 @@ public class GoodsView extends InvestorView {
                         if (selectedChart.equals("line")) {
                             lineChart.getData().clear();
                             LinearChartManager.addSeries(lineChart, lastData, selectedRange);
-
-                            if (pointerType!=null && pointerType != "hide") {
+                            lineChart.setTitle(rowData.getName());
+                            if (pointerType != null && pointerType != "hide") {
                                 OnPointerChange();
                             }
                         } else {
                             CandleChart.generateData(lastData);
                             candleChart = new CandleChart();
-                            
+
                             CandleChart.CandleStickChart chart = candleChart.createChart();
+                            chart.setTitle(rowData.getName());
                             pane.getStylesheets().add("resources/css/CandleStickChart.css");
                             borderPane.setCenter(chart);
                         }
@@ -129,15 +130,14 @@ public class GoodsView extends InvestorView {
                 lastData = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
                 lineChart.getData().clear();
 
-                if (pointerType!=null && !pointerType.equals("hide")) {
+                if (pointerType != null && !pointerType.equals("hide")) {
                     OnPointerChange();
                     if (sdChartShowed) {
                         OnSDPointer(true);
                     }
-                } else if(selectedChart.equals("line")){
+                } else if (selectedChart.equals("line")) {
                     LinearChartManager.addSeries(lineChart, lastData, selectedRange);
-                }
-                else {
+                } else {
                     CandleChart.generateData(lastData);
                     //candleChart = new CandleChart();
                     chart = candleChart.createChart();
@@ -273,6 +273,7 @@ public class GoodsView extends InvestorView {
             CandleChart.generateData(lastData);
             candleChart = new CandleChart();
             chart = candleChart.createChart();
+            chart.setTitle(selectedIndex.getName());
             pane.getStylesheets().add("resources/css/CandleStickChart.css");
             borderPane.setCenter(chart);
             selectedChart = chartType;

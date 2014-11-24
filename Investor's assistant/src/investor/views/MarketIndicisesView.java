@@ -31,12 +31,12 @@ import org.json.JSONException;
 
 /**
  * Pierwszy widok z indeksami giełdowymi
+ *
  * @author Tomasz
  */
 public class MarketIndicisesView extends InvestorView {
 
     //Widok posiada wykres liniowy oraz tabelke
-    
     //TODO:
     //Tu powinny się jeszcze znaleźć referencję do wykresu świecowego i ewentualnie dla drugiego liniowego dla wskaźnika SD
     private CandleChart candleChart;
@@ -50,14 +50,14 @@ public class MarketIndicisesView extends InvestorView {
     //Metoda generująca wykres
     public void InitView() {
         pane = new VBox();
-        
+
         //Stworzenie wykresu
         lineChart = LinearChartManager.linear();
         lineChart.setTitle("");
-        
+
         //Poczatkowo zakres dat to 3M
         selectedRange = DataRange.THREEMONTH;
-        
+
         selectedChart = "line";
         //Stworzenie tabelki
         table = new TableView();
@@ -68,39 +68,39 @@ public class MarketIndicisesView extends InvestorView {
         } catch (Exception e) {
             System.out.println("Something went wrong when populating market indicisies view");
         }
-        
+
         //Dodajemy kolumny do tabelki
         table.getColumns().addAll(initColumns());
-        
-        
+
         //Obsługa kliknięcia wiersza w tabelce
         table.setRowFactory(tv -> {
             TableRow<Index> row = new TableRow<Index>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    
+
                     //Zapamiętujemy wybrany wiersz dla widoku
                     Index rowData = row.getItem();
                     selectedIndex = rowData;
                     //System.out.println(rowData);
                     try {
-                        
+
                         //Sciągamy dane z serwera dla danego wiersza i dodajemy je do wykresu
                         lastData = NetworkManager.showMore(rowData.getSymbol(), selectedRange);
                         System.out.println(lastData.length);
 
-                        if(selectedChart.equals("line")) {
+                        if (selectedChart.equals("line")) {
                             lineChart.getData().clear();
                             LinearChartManager.addSeries(lineChart, lastData, selectedRange);
-                            if (pointerType!=null && pointerType != "hide") {
+                            lineChart.setTitle(rowData.getName());
+                            if (pointerType != null && pointerType != "hide") {
                                 OnPointerChange();
                             }
                         } else {
                             CandleChart.generateData(lastData);
-                            candleChart = new CandleChart(); 
+                            candleChart = new CandleChart();
                             CandleChart.CandleStickChart chart = candleChart.createChart();
-
-                            pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
+                            chart.setTitle(rowData.getName());
+                            pane.getStylesheets().add("resources/css/CandleStickChart.css");
                             borderPane.setCenter(chart);
                         }
                     } catch (Exception ex) {
@@ -115,23 +115,23 @@ public class MarketIndicisesView extends InvestorView {
         table.setEditable(false);
 
         VBox vBox = (VBox) pane;
-        
+
         //Panel dla wykresu i przycisków konfiguracyjnych
         borderPane = new BorderPane();
-        
+
         //Po środku wykres
         borderPane.setCenter(lineChart);
-        
+
         //Na prawo przyciski konfiguracyjne
         borderPane.setRight(addMenuButtons());
-        
+
         //Dodanie do panelu widoku tabelki
         vBox.getChildren().add(table);
-        
+
         //Dodanie do panelu widoku panelu z wykresem i przyciskami konfiguracyjnymi
         vBox.getChildren().add(borderPane);
     }
-    
+
     public LineChart GetChart() {
         return lineChart;
     }
@@ -139,7 +139,7 @@ public class MarketIndicisesView extends InvestorView {
     public TableView getTable() {
         return table;
     }
-    
+
     //Metoda wywoływana po zmianie zakresu dat. Ściągane są z serwera nowe dane dla wykresu
     //TODO:
     //Powinna działać na dwa różne sposoby, w zależności od pokazanego wykresu
@@ -149,16 +149,15 @@ public class MarketIndicisesView extends InvestorView {
                 lastData = NetworkManager.showMore(selectedIndex.getSymbol(), selectedRange);
                 lineChart.getData().clear();
 
-                if (pointerType!=null && !pointerType.equals("hide")) {
+                if (pointerType != null && !pointerType.equals("hide")) {
                     OnPointerChange();
                     if (sdChartShowed) {
                         OnSDPointer(true);
                     }
-                } else if(selectedChart.equals("line")){
+                } else if (selectedChart.equals("line")) {
                     LinearChartManager.addSeries(lineChart, lastData, selectedRange);
                     borderPane.setCenter(lineChart);
-                }
-                else {
+                } else {
                     CandleChart.generateData(lastData);
                     //candleChart = new CandleChart();
                     chart = candleChart.createChart();
@@ -179,8 +178,8 @@ public class MarketIndicisesView extends InvestorView {
             OnDataRangeChanged();
             return;
         }
-        
-        if("1D".equals(selectedRange)) {
+
+        if ("1D".equals(selectedRange)) {
             return;
         }
 
@@ -192,6 +191,7 @@ public class MarketIndicisesView extends InvestorView {
             CandleChart.generateData(lastData);
             candleChart = new CandleChart();
             chart = candleChart.createChart();
+            chart.setTitle(selectedIndex.getName());
             pane.getStylesheets().add("resources/css/CandleStickChart.css");
             borderPane.setCenter(chart);
             selectedChart = chartType;
@@ -267,7 +267,7 @@ public class MarketIndicisesView extends InvestorView {
                 break;
         }
     }
-    
+
     protected void OnSDPointer(boolean action) {
         sdChartShowed = action;
         //true for showing sd chart

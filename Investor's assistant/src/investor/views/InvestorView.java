@@ -25,6 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -37,7 +38,7 @@ public abstract class InvestorView {
 
     //Wybrany zakres danych dla danego widoku
     protected DataRange selectedRange;
-    
+
     //Wybrany typ wykresu
     protected String selectedChart;
 
@@ -55,9 +56,9 @@ public abstract class InvestorView {
 
     //Wybrany index dla danego widoku, może być nullem jeśli jeszcze nic nie wybraliśmy
     protected Index selectedIndex;
-    
+
     protected ToggleButton candle;
-    
+
     protected boolean sdChartShowed = false;
 
     public Pane getPane() {
@@ -138,7 +139,11 @@ public abstract class InvestorView {
         List<DataRange> enumList = Arrays.asList(DataRange.values());
 
         FlowPane flowPane = new FlowPane();
+        flowPane.setAlignment(Pos.CENTER);
         flowPane.setPrefWrapLength(70);
+
+        Text rangesTitle = new Text("Zakresy dat");
+        flowPane.getChildren().add((rangesTitle));
 
         //Przyciski tworze w pętli lecąc po wartośćiach enuma
         for (DataRange d : enumList) {
@@ -155,36 +160,37 @@ public abstract class InvestorView {
         //W klasach dziedziczących po InvestorView wywoływana jest abstrakcyjna metoda OnDataRangeChanged
         rangeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
-                if(new_toggle==null) {
+                if (new_toggle == null) {
                     toggle.setSelected(true);
                     return;
                 }
                 System.out.println(new_toggle.toString());
 
                 selectedRange = DataRange.valueOf((String) new_toggle.getUserData());
-                
-                switch(selectedRange) {
+
+                switch (selectedRange) {
                     case ONEDAY:
                         candle.setDisable(true);
                         break;
-                    default: 
+                    default:
                         candle.setDisable(false);
                         break;
                 }
                 OnDataRangeChanged();
             }
-        });      
+        });
         chartGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
 
-                 if(new_toggle==null) {
+                if (new_toggle == null) {
                     toggle.setSelected(true);
                     return;
                 }
-                 
+
                 //System.out.println(DataRange.valueOf((String)new_toggle.getUserData()));
                 //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
                 selectedChart = new_toggle.getUserData().toString();
+                ((ToggleButton)rangeGroup.getToggles().get(0)).setDisable(selectedChart.equals("candle"));
                 //System.out.println("!!!!!!!!!!!!!!!"+selectedChart);
                 OnChartTypeChanged(selectedChart);
             }
@@ -232,9 +238,6 @@ public abstract class InvestorView {
 
         MA.setToggleGroup((pointerGroup));
 
-        //FIX
-        //Ten przycisk nie powinien być w grupie z innymi!!!!!
-        //SD.setToggleGroup((pointerGroup));
         bollinger.setToggleGroup((pointerGroup));
         koperta.setToggleGroup((pointerGroup));
         EMA.setToggleGroup((pointerGroup));
@@ -242,11 +245,13 @@ public abstract class InvestorView {
 
         pointerGroup.selectToggle(hide);
 
-        pointerGroupPane.getChildren().addAll(MA, SD, bollinger, koperta, EMA, hide);
+        Text pointersTitle = new Text("Wskaźniki");
+
+        pointerGroupPane.getChildren().addAll(pointersTitle, MA, SD, bollinger, koperta, EMA, hide);
 
         pointerGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
-                if(new_toggle != null){
+                if (new_toggle != null) {
                     System.out.println(new_toggle.toString());
                     //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
                     lastPointerType = pointerType;
@@ -255,21 +260,18 @@ public abstract class InvestorView {
                     lastPointerType = pointerType;
                     pointerType = "hide";
                 }
-                    OnPointerChange();
+                OnPointerChange();
             }
         });
 
-        SD.selectedProperty().addListener(new ChangeListener<Boolean>(){
+        SD.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 OnSDPointer(newValue);
             }
         });
-        
-        
-        
+
         //----------------------------------------------------------------------
-        
         mainPane.add(chartGroupPane, 0, 0);
         mainPane.add(flowPane, 0, 1);
         mainPane.add(pointerGroupPane, 0, 2);
@@ -304,7 +306,7 @@ public abstract class InvestorView {
     protected abstract void OnDataRangeChanged();
 
     protected abstract void OnPointerChange();
-    
+
     protected abstract void OnSDPointer(boolean action);
 
     protected abstract void OnChartTypeChanged(String chartType);

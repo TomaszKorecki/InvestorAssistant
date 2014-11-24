@@ -39,13 +39,17 @@ public class MainMenu extends Application {
     CurrenciesCorrelationsView currenciesCorrelationView = new CurrenciesCorrelationsView();
     GoodsView goodsView = new GoodsView();
 
-    InvestorView[] views = {marketIndicicesView, companiesView, currenciesView, goodsView, currenciesCorrelationView};
+    InvestorView[] views = {marketIndicicesView, companiesView, currenciesView, goodsView};
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Asystent Inwestora");
-        primaryStage.setWidth(1000);
-        primaryStage.setHeight(800);
+        
+//        primaryStage.setWidth(1000);
+//        primaryStage.setHeight(800);
+        
+        primaryStage.setFullScreen(true);
+        
         tabs = CreateTabs();
 
         BorderPane borderPane = new BorderPane();
@@ -72,9 +76,10 @@ public class MainMenu extends Application {
                             borderPane.setCenter(currenciesView.getPane());
                         } else if (t1 == goods) {
                             borderPane.setCenter(goodsView.getPane());
-                        } else if (t1 == currenciesCorrelations) {
-                            borderPane.setCenter(currenciesCorrelationView.getPane());
                         }
+//                        } else if (t1 == currenciesCorrelations) {
+//                            borderPane.setCenter(currenciesCorrelationView.getPane());
+//                        }
                     }
                 }
         );
@@ -97,7 +102,7 @@ public class MainMenu extends Application {
 
     private TabPane CreateTabs() {
         TabPane tabPane = new TabPane();
-        tabPane.getTabs().addAll(marketIndices, companies, currencies, goods, currenciesCorrelations);
+        tabPane.getTabs().addAll(marketIndices, companies, currencies, goods);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         return tabPane;
     }

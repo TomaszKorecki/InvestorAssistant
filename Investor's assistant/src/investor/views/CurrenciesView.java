@@ -79,14 +79,16 @@ public class CurrenciesView extends InvestorView {
 
                         if(selectedChart.equals("line")) {
                             lineChart.getData().clear();
+                            lineChart.setTitle(rowData.getName());
                             LinearChartManager.addSeries(lineChart, lastData, selectedRange);
                             if (pointerType!=null && pointerType != "hide") {
                                 OnPointerChange();
                             }
                         } else {
                             CandleChart.generateData(lastData);
-                            candleChart = new CandleChart(); 
+                            candleChart = new CandleChart();
                             CandleChart.CandleStickChart chart = candleChart.createChart();
+                            chart.setTitle(rowData.getName());
 
                             pane.getStylesheets().add("resources/css/CandleStickChart.css"); 
                             borderPane.setCenter(chart);
@@ -165,6 +167,7 @@ public class CurrenciesView extends InvestorView {
             CandleChart.generateData(lastData);
             candleChart = new CandleChart();
             chart = candleChart.createChart();
+            chart.setTitle(selectedIndex.getName());
             pane.getStylesheets().add("resources/css/CandleStickChart.css");
             borderPane.setCenter(chart);
             selectedChart = chartType;
