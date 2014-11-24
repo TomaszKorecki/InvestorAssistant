@@ -97,6 +97,7 @@ public class NetworkManager {
    
 
     private static Index[] downloadFromServer(String url) throws IOException, JSONException {
+        url = url.replaceAll("\\^", "%5E");
         System.out.println("Connecting to url \n" + url);
         InputStream is = new URL(url).openStream();
         try {

@@ -91,7 +91,7 @@ public abstract class InvestorView {
         TableColumn max_val = new TableColumn("Wartość maksymalna");
         max_val.setCellValueFactory(new PropertyValueFactory<Index, String>("max_val"));
 
-        TableColumn vol_val = new TableColumn("Wartość");
+        TableColumn vol_val = new TableColumn("Wolumen");
         vol_val.setCellValueFactory(new PropertyValueFactory<Index, String>("vol_val"));
 
         TableColumn[] columns = {symbol, name, day, hour, open_val, close_val, min_val, max_val, vol_val};
@@ -234,11 +234,16 @@ public abstract class InvestorView {
 
         pointerGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
-                System.out.println(new_toggle.toString());
-                //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
-                lastPointerType = pointerType;
-                pointerType = (String) new_toggle.getUserData();
-                OnPointerChange();
+                if(new_toggle != null){
+                    System.out.println(new_toggle.toString());
+                    //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
+                    lastPointerType = pointerType;
+                    pointerType = (String) new_toggle.getUserData();
+                } else {
+                    lastPointerType = pointerType;
+                    pointerType = "";
+                }
+                    OnPointerChange();
             }
         });
 
