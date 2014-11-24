@@ -44,10 +44,12 @@ public class MainMenu extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Asystent Inwestora");
-
+        primaryStage.setWidth(1000);
+        primaryStage.setHeight(800);
         tabs = CreateTabs();
 
         BorderPane borderPane = new BorderPane();
+        
 
         borderPane.setTop(tabs);
 

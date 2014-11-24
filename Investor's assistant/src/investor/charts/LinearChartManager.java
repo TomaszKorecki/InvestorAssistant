@@ -3,6 +3,7 @@ package investor.charts;
 import investor.data.DataRange;
 import investor.data.Index;
 import investor.indicators.Indicators;
+import investor.network.DataType;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javafx.scene.chart.BarChart;
@@ -97,6 +98,10 @@ public class LinearChartManager {
         int days;
 
         switch (r) {
+            case ONEDAY:
+                days = 1;
+                break;
+                
             case FIVEDAYS:
                 days = 5;
                 break;
@@ -132,21 +137,27 @@ public class LinearChartManager {
         return labels;
     }
 
-    public static String[] generateXLabels(Index[] data) {
+    public static String[] generateXLabels(Index[] data, DataRange range) {
         String labels[] = new String[data.length];
         for (int i = 0; i < data.length; i++) {
 //            cal.add(Calendar.DATE, +1);
 //            labels[i] = formatter.format(cal.getTime());
-
-            labels[i] = data[i].getDay();
+            switch(range) {
+                case ONEDAY:
+                    labels[i] = data[i].getDay() + " " + data[i].getHour();
+                    break;
+                default:
+                    labels[i] = data[i].getDay();
+                    break;
+            }
         }
         return labels;
     }
     
-    public static void addSeries(LineChart<String, Number> lineChart, Index[] data, String type) {
+    public static void addSeries(LineChart<String, Number> lineChart, Index[] data, String type, DataRange range) {
         //lineChart.getData().addAll(series);
 
-        String labels[] = generateXLabels(data);
+        String labels[] = generateXLabels(data, range);
         double values[] = new double[data.length];
         
         for(int i=0; i < data.length; i++){
@@ -158,10 +169,10 @@ public class LinearChartManager {
         lineChart.getData().addAll(s);
     }
     
-    public static void addSeries(LineChart<String, Number> lineChart, Index[] data) {
+    public static void addSeries(LineChart<String, Number> lineChart, Index[] data, DataRange range) {
         //lineChart.getData().addAll(series);
 
-        String labels[] = generateXLabels(data);
+        String labels[] = generateXLabels(data, range);
         double values[] = new double[data.length];
         
         for(int i=0; i < data.length; i++){

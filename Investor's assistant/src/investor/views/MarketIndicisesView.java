@@ -39,7 +39,7 @@ public class MarketIndicisesView extends InvestorView {
     
     //TODO:
     //Tu powinny się jeszcze znaleźć referencję do wykresu świecowego i ewentualnie dla drugiego liniowego dla wskaźnika SD
-private CandleChart candleChart;
+    private CandleChart candleChart;
     private CandleChart.CandleStickChart chart;
     private LineChart lineChart;
     private LineChart lineChartSD;
@@ -91,7 +91,7 @@ private CandleChart candleChart;
 
                         if(selectedChart.equals("line")) {
                             lineChart.getData().clear();
-                            LinearChartManager.addSeries(lineChart, lastData);
+                            LinearChartManager.addSeries(lineChart, lastData, selectedRange);
                             if (pointerType!=null && pointerType != "hide") {
                                 OnPointerChange();
                             }
@@ -155,7 +155,8 @@ private CandleChart candleChart;
                         OnSDPointer(true);
                     }
                 } else if(selectedChart.equals("line")){
-                    LinearChartManager.addSeries(lineChart, lastData);
+                    LinearChartManager.addSeries(lineChart, lastData, selectedRange);
+                    borderPane.setCenter(lineChart);
                 }
                 else {
                     CandleChart.generateData(lastData);
@@ -176,11 +177,16 @@ private CandleChart candleChart;
         if (lastData == null) {
             System.out.println("Original data is null, downloading it");
             OnDataRangeChanged();
+            return;
+        }
+        
+        if("1D".equals(selectedRange)) {
+            return;
         }
 
         if (chartType.equals("line")) {
             lineChart.getData().clear();
-            LinearChartManager.addSeries(lineChart, lastData);
+            LinearChartManager.addSeries(lineChart, lastData, selectedRange);
             borderPane.setCenter(lineChart);
         } else if (chartType.equals("candle")) {
             CandleChart.generateData(lastData);
@@ -196,6 +202,7 @@ private CandleChart candleChart;
         if (lastData == null) {
             System.out.println("Original data is null, downloading it");
             OnDataRangeChanged();
+            return;
         }
 
         Index[] dataPointer = new Index[lastData.length];
@@ -208,7 +215,7 @@ private CandleChart candleChart;
         int size = lastData.length;
 
         lineChart.getData().clear();
-        LinearChartManager.addSeries(lineChart, lastData);
+        LinearChartManager.addSeries(lineChart, lastData, selectedRange);
 
         switch (pointerType) {
             case "MA":
@@ -216,7 +223,7 @@ private CandleChart candleChart;
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data1[i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "MA");
+                LinearChartManager.addSeries(lineChart, dataPointer, "MA", selectedRange);
                 break;
             case "bollinger":
                 data2 = Indicators.Bollinger(dataPointer, size, K);
@@ -224,15 +231,15 @@ private CandleChart candleChart;
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[0][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger1");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger1", selectedRange);
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[1][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger2");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger2", selectedRange);
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[2][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger3");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger3", selectedRange);
                 break;
 
             case "koperta":
@@ -240,11 +247,11 @@ private CandleChart candleChart;
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[0][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta1");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta1", selectedRange);
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[1][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta2");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta2", selectedRange);
                 break;
             case "EMA":
                 double alpha = 2 / (size + 1);
@@ -252,7 +259,7 @@ private CandleChart candleChart;
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data1[i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "EMA");
+                LinearChartManager.addSeries(lineChart, dataPointer, "EMA", selectedRange);
                 break;
             case "hide":
                 break;
@@ -268,6 +275,7 @@ private CandleChart candleChart;
             if (lastData == null) {
                 System.out.println("Original data is null, downloading it");
                 OnDataRangeChanged();
+                return;
             }
 
             Index[] dataPointer = new Index[lastData.length];
@@ -286,7 +294,7 @@ private CandleChart candleChart;
                 dataPointer[i].setClose_val(data1[i]);
             }
 
-            LinearChartManager.addSeries(lineChartSD, dataPointer, "SD");
+            LinearChartManager.addSeries(lineChartSD, dataPointer, "SD", selectedRange);
             BorderPane bPane = (BorderPane) pane.getChildren().get(1);
             bPane.setBottom(lineChartSD);
         } else { //let's hide it

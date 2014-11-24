@@ -56,6 +56,8 @@ public abstract class InvestorView {
     //Wybrany index dla danego widoku, może być nullem jeśli jeszcze nic nie wybraliśmy
     protected Index selectedIndex;
     
+    protected ToggleButton candle;
+    
     protected boolean sdChartShowed = false;
 
     public Pane getPane() {
@@ -117,7 +119,7 @@ public abstract class InvestorView {
         line.setGraphic(new ImageView(image1));
         line.setUserData("line");
 
-        ToggleButton candle = new ToggleButton();
+        candle = new ToggleButton();
         candle.setGraphic(new ImageView(image2));
         candle.setUserData("candle");
 
@@ -160,6 +162,15 @@ public abstract class InvestorView {
                 System.out.println(new_toggle.toString());
 
                 selectedRange = DataRange.valueOf((String) new_toggle.getUserData());
+                
+                switch(selectedRange) {
+                    case ONEDAY:
+                        candle.setDisable(true);
+                        break;
+                    default: 
+                        candle.setDisable(false);
+                        break;
+                }
                 OnDataRangeChanged();
             }
         });      
@@ -170,6 +181,7 @@ public abstract class InvestorView {
                     toggle.setSelected(true);
                     return;
                 }
+                 
                 //System.out.println(DataRange.valueOf((String)new_toggle.getUserData()));
                 //selectedRange = DataRange.valueOf((String)new_toggle.getUserData());
                 selectedChart = new_toggle.getUserData().toString();
@@ -268,6 +280,8 @@ public abstract class InvestorView {
     //Skróty dla enuma DataRange
     String getDataRangeShortName(DataRange range) {
         switch (range) {
+            case ONEDAY:
+                return "1D";
             case FIVEDAYS:
                 return "5D";
             case ONEMONTH:

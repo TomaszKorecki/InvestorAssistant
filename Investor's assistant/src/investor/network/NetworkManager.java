@@ -57,6 +57,9 @@ public class NetworkManager {
         String url = serverUrl + dataType + "/";
         
         switch(range){
+            case ONEDAY:
+                url = "https://zpi.herokuapp.com/today/"+dataType;
+                break;
             case FIVEDAYS:
                 url += "5D";
                 break;

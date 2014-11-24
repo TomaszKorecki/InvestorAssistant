@@ -79,7 +79,7 @@ public class CurrenciesView extends InvestorView {
 
                         if(selectedChart.equals("line")) {
                             lineChart.getData().clear();
-                            LinearChartManager.addSeries(lineChart, lastData);
+                            LinearChartManager.addSeries(lineChart, lastData, selectedRange);
                             if (pointerType!=null && pointerType != "hide") {
                                 OnPointerChange();
                             }
@@ -133,7 +133,7 @@ public class CurrenciesView extends InvestorView {
                         OnSDPointer(true);
                     }
                 } else if(selectedChart.equals("line")){
-                    LinearChartManager.addSeries(lineChart, lastData);
+                    LinearChartManager.addSeries(lineChart, lastData, selectedRange);
                 }
                 else {
                     CandleChart.generateData(lastData);
@@ -154,11 +154,12 @@ public class CurrenciesView extends InvestorView {
         if (lastData == null) {
             System.out.println("Original data is null, downloading it");
             OnDataRangeChanged();
+            return;
         }
 
         if (chartType.equals("line")) {
             lineChart.getData().clear();
-            LinearChartManager.addSeries(lineChart, lastData);
+            LinearChartManager.addSeries(lineChart, lastData, selectedRange);
             borderPane.setCenter(lineChart);
         } else if (chartType.equals("candle")) {
             CandleChart.generateData(lastData);
@@ -174,6 +175,7 @@ public class CurrenciesView extends InvestorView {
         if (lastData == null) {
             System.out.println("Original data is null, downloading it");
             OnDataRangeChanged();
+            return;
         }
 
         Index[] dataPointer = new Index[lastData.length];
@@ -186,7 +188,7 @@ public class CurrenciesView extends InvestorView {
         int size = lastData.length;
 
         lineChart.getData().clear();
-        LinearChartManager.addSeries(lineChart, lastData);
+        LinearChartManager.addSeries(lineChart, lastData, selectedRange);
 
         switch (pointerType) {
             case "MA":
@@ -194,7 +196,7 @@ public class CurrenciesView extends InvestorView {
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data1[i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "MA");
+                LinearChartManager.addSeries(lineChart, dataPointer, "MA", selectedRange);
                 break;
             case "bollinger":
                 data2 = Indicators.Bollinger(dataPointer, size, K);
@@ -202,15 +204,15 @@ public class CurrenciesView extends InvestorView {
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[0][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger1");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger1", selectedRange);
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[1][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger2");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger2", selectedRange);
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[2][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger3");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger3", selectedRange);
                 break;
 
             case "koperta":
@@ -218,11 +220,11 @@ public class CurrenciesView extends InvestorView {
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[0][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta1");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta1", selectedRange);
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[1][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta2");
+                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta2", selectedRange);
                 break;
             case "EMA":
                 double alpha = 2 / (size + 1);
@@ -230,7 +232,7 @@ public class CurrenciesView extends InvestorView {
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data1[i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer, "EMA");
+                LinearChartManager.addSeries(lineChart, dataPointer, "EMA", selectedRange);
                 break;
             case "hide":
                 break;
@@ -246,6 +248,7 @@ public class CurrenciesView extends InvestorView {
             if (lastData == null) {
                 System.out.println("Original data is null, downloading it");
                 OnDataRangeChanged();
+                return;
             }
 
             Index[] dataPointer = new Index[lastData.length];
@@ -264,7 +267,7 @@ public class CurrenciesView extends InvestorView {
                 dataPointer[i].setClose_val(data1[i]);
             }
 
-            LinearChartManager.addSeries(lineChartSD, dataPointer, "SD");
+            LinearChartManager.addSeries(lineChartSD, dataPointer, "SD", selectedRange);
             BorderPane bPane = (BorderPane) pane.getChildren().get(1);
             bPane.setBottom(lineChartSD);
         } else { //let's hide it
