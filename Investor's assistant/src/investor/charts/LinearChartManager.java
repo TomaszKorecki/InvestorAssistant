@@ -143,6 +143,21 @@ public class LinearChartManager {
         return labels;
     }
     
+    public static void addSeries(LineChart<String, Number> lineChart, Index[] data, String type) {
+        //lineChart.getData().addAll(series);
+
+        String labels[] = generateXLabels(data);
+        double values[] = new double[data.length];
+        
+        for(int i=0; i < data.length; i++){
+            values[i] = data[i].getClose_val();
+        }
+        
+        XYChart.Series s = LinearChartManager.createSeries(type, labels, values);      
+        
+        lineChart.getData().addAll(s);
+    }
+    
     public static void addSeries(LineChart<String, Number> lineChart, Index[] data) {
         //lineChart.getData().addAll(series);
 
@@ -152,8 +167,8 @@ public class LinearChartManager {
         for(int i=0; i < data.length; i++){
             values[i] = data[i].getClose_val();
         }
-
-        XYChart.Series s = LinearChartManager.createSeries("SD", labels, values);      
+        
+        XYChart.Series s = LinearChartManager.createSeries("Dane", labels, values);      
         
         lineChart.getData().addAll(s);
     }

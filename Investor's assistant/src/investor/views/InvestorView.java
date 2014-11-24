@@ -241,7 +241,7 @@ public abstract class InvestorView {
                     pointerType = (String) new_toggle.getUserData();
                 } else {
                     lastPointerType = pointerType;
-                    pointerType = "";
+                    pointerType = "hide";
                 }
                     OnPointerChange();
             }

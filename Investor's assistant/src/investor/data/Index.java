@@ -174,5 +174,23 @@ public class Index {
     public void setVol_val(double vol_val) {
         this.vol_val = vol_val;
     }
-
+    
+    /**
+     * @param index the vol_val to set
+     * copy constructor
+     */
+    public Index(Index index) {
+        this.close_val = index.getClose_val();
+        this.day = index.getDay();
+        this.hour = index.getHour();
+        this.max_val = index.getMax_val();
+        this.min_val = index.getMin_val();
+        this.name = index.getName();
+        this.open_val = index.getOpen_val();
+        this.symbol = index.getSymbol();
+        this.vol_val = index.getVol_val();
+    }
+    
+    public Index() {}
+    
 }

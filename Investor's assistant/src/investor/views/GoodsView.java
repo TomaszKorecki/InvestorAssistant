@@ -157,7 +157,10 @@ public class GoodsView extends InvestorView {
             OnDataRangeChanged();
         }
 
-        Index[] dataPointer = lastData.clone();
+        Index[] dataPointer = new Index[lastData.length];
+        for (int i = 0; i < lastData.length; i++) {
+            dataPointer[i] = new Index(lastData[i]);
+        }
 
         double[] data1;
         double[][] data2;
@@ -172,7 +175,7 @@ public class GoodsView extends InvestorView {
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data1[i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer);
+                LinearChartManager.addSeries(lineChart, dataPointer, "MA");
                 break;
             case "bollinger":
                 data2 = Indicators.Bollinger(dataPointer, size, K);
@@ -180,15 +183,15 @@ public class GoodsView extends InvestorView {
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[0][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer);
+                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger1");
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[1][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer);
+                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger2");
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[2][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer);
+                LinearChartManager.addSeries(lineChart, dataPointer, "Bollinger3");
                 break;
 
             case "koperta":
@@ -196,11 +199,11 @@ public class GoodsView extends InvestorView {
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[0][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer);
+                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta1");
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data2[1][i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer);
+                LinearChartManager.addSeries(lineChart, dataPointer, "Koperta2");
                 break;
             case "EMA":
                 double alpha = 2 / (size + 1);
@@ -208,7 +211,7 @@ public class GoodsView extends InvestorView {
                 for (int i = 0; i < size; i++) {
                     dataPointer[i].setClose_val(data1[i]);
                 }
-                LinearChartManager.addSeries(lineChart, dataPointer);
+                LinearChartManager.addSeries(lineChart, dataPointer, "EMA");
                 break;
             case "hide":
                 break;
@@ -226,7 +229,10 @@ public class GoodsView extends InvestorView {
                 OnDataRangeChanged();
             }
 
-            Index[] dataPointer = lastData.clone();
+            Index[] dataPointer = new Index[lastData.length];
+            for (int i = 0; i < lastData.length; i++) {
+                dataPointer[i] = new Index(lastData[i]);
+            }
 
             lineChartSD = LinearChartManager.linear();
             lineChartSD.setTitle("SD");
@@ -239,7 +245,7 @@ public class GoodsView extends InvestorView {
                 dataPointer[i].setClose_val(data1[i]);
             }
 
-            LinearChartManager.addSeries(lineChartSD, dataPointer);
+            LinearChartManager.addSeries(lineChartSD, dataPointer, "SD");
             BorderPane bPane = (BorderPane) pane.getChildren().get(1);
             bPane.setBottom(lineChartSD);
         } else { //let's hide it
