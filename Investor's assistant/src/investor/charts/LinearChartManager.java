@@ -39,8 +39,8 @@ public class LinearChartManager {
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         yAxis.setForceZeroInRange(false);
-        xAxis.setLabel("oś X");
-        yAxis.setLabel("oś Y");
+        xAxis.setLabel("Data");
+        yAxis.setLabel("Wartość");
 
         final LineChart<String, Number> lineChart
                 = new LineChart<String, Number>(xAxis, yAxis);
@@ -111,10 +111,10 @@ public class LinearChartManager {
                 break;
 
             case ONEMONTH:
-                days = 30;
+                days = 23;
                 break;
             case THREEMONTH:
-                days = 90;
+                days = 65;
                 break;
 
             default:

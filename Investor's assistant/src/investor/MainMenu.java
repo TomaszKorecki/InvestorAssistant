@@ -45,10 +45,11 @@ public class MainMenu extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Asystent Inwestora");
         
-//        primaryStage.setWidth(1000);
-//        primaryStage.setHeight(800);
+        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(800);
+        primaryStage.setMaximized(true);
         
-        primaryStage.setFullScreen(true);
+//        primaryStage.setFullScreen(true);
         
         tabs = CreateTabs();
 
