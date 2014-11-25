@@ -13,7 +13,9 @@ import investor.data.Index;
  */
 public class Indicators{
     //Metoda do wyliczenia wskaźnika Moving Average, data - dane dla instrumentu, n - liczba cen branych pod uwage
-    public static double[] MA(Index[] data,int n){
+    public static double[] MA(Index[] data2,int n){
+        Index[] data = new Index[data2.length];
+        data=ReverseIndex(data2);
         double[] out = new double[data.length];
         for(int i=0;i<data.length;i++){
             if(data.length-n<=i){
@@ -33,10 +35,13 @@ public class Indicators{
                 out[i]=avg_close;
             }
         }
+        out=Reverse(out);
         return out;
     }
     //Metoda do wyliczenia odchylenia standardowego (Standard Deviation), do wyswietlenia na osobnym wykresie
-    public static double[] SD(Index[] data,int n){
+    public static double[] SD(Index[] data2,int n){
+        Index[] data = new Index[data2.length];
+        data=ReverseIndex(data2);
         double[] out = new double[data.length];
         double[] temp = new double[data.length];
         temp=MA(data,n);
@@ -56,11 +61,14 @@ public class Indicators{
                 out[i]=Math.sqrt(sum/(double)n);
             }
         }
+        out=Reverse(out);
         return out;
     }
     //Wyliczenie wartości wskaźniga Wstęg Bollingera
     //Macierz 3xN, 1 kolumna to SD*K+MA, kolumna 2 to MA, kolumna 3 to MA-SD*K// Przyjmowane K to zwykle ~ 2
-    public static double[][] Bollinger(Index[] data,int n,int k){
+    public static double[][] Bollinger(Index[] data2,int n,int k){
+        Index[] data = new Index[data2.length];
+        data=ReverseIndex(data2);
         double[][] out = new double[3][data.length];
         out[1]=MA(data,n);
         double[] temp = new double[data.length];
@@ -69,13 +77,18 @@ public class Indicators{
             out[0][i]=out[1][i]+(temp[i]*k);
             out[2][i]=out[1][i]-(temp[i]*k);
         }
+        out[1]=Reverse(out[1]);
+        out[2]=Reverse(out[2]);
+        out[0]=Reverse(out[0]);
         return out;
     }
     //Wskaźnik - kopera, podobne do Wstęgi Bollingera, ale tym razem odległośćod od MA jest procentowa, nie
     //K-krotnością odchylenia standardowego. Nie wymaga także wyświetlania śedniej kroczącej, dlatego
     //zwracana macierz jest 2xn,kolumna o indeksie 0 to górna linia, 1 dolna
     //Wartość p zwykle ustalana na poziomie 2,5-10%
-    public static double[][] Koperta(Index[] data,int n,int p){
+    public static double[][] Koperta(Index[] data2,int n,int p){
+        Index[] data = new Index[data2.length];
+        data=ReverseIndex(data2);
         double[][] out = new double[2][data.length];
         double[] temp = new double[data.length];
         temp=MA(data,n);
@@ -83,14 +96,16 @@ public class Indicators{
             out[0][i]=temp[i]+((double)p/100)*temp[i];
             out[1][i]=temp[i]-((double)p/100)*temp[i];
         }
-        out[0]=Reverse(out[0]);
         out[1]=Reverse(out[1]);
+        out[0]=Reverse(out[0]);
         return out;
     }
     //Wykładnicza średnia ruchoma (EMA)
     //Podobne do średniej, jednak każda kolejna wartość brana pod uwagę do śedniej posada wykładniczo mniejszą
     //wagę (współczynnik jest równy (1-alfa)^n gdzie n to kolejna cena brana pod uwage przy wyliczaniu aktualenej ceny
-    public static double[] EMA(Index[] data,int n,double alfa){
+    public static double[] EMA(Index[] data2,int n,double alfa){
+        Index[] data = new Index[data2.length];
+        data=ReverseIndex(data2);
         double[] out = new double[data.length];
         for(int i=0;i<data.length;i++){
             int expo=0;
@@ -113,11 +128,19 @@ public class Indicators{
                 out[i]=avg_close/div;
             }
         }
+        out=Reverse(out);
         return out;
     }
     
     public static double[] Reverse(double[] Arr){
        double[] temp = new double[Arr.length];
+       for(int i=0;i<Arr.length;i++){
+           temp[i]=Arr[Arr.length-1-i];
+       }
+       return temp;
+    }
+    public static Index[] ReverseIndex(Index[] Arr){
+       Index[] temp = new Index[Arr.length];
        for(int i=0;i<Arr.length;i++){
            temp[i]=Arr[Arr.length-1-i];
        }
