@@ -3,11 +3,8 @@ package investor.charts;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
@@ -18,7 +15,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-import javafx.util.Duration;
 import investor.data.Index;
 
 /**
@@ -60,7 +56,7 @@ public class CandleChart {
         for (int i=0; i< data.length; i++) {
             double[] day = data[i];
             series.getData().add(
-                new XYChart.Data<Number,Number>(day[0],day[1],new CandleStickExtraValues(day[2],day[3],day[4],day[5]))
+                new XYChart.Data<Number,Number>(day[0],day[1],new CandleStickValues(day[2],day[3],day[4],day[5]))
             );
         }
         ObservableList<XYChart.Series<Number,Number>> data = bc.getData();
@@ -108,7 +104,7 @@ public class CandleChart {
                     double x = getXAxis().getDisplayPosition(getCurrentDisplayedXValue(item));
                     double y = getYAxis().getDisplayPosition(getCurrentDisplayedYValue(item));
                     Node itemNode = item.getNode();
-                    CandleStickExtraValues extra = (CandleStickExtraValues) item.getExtraValue();
+                    CandleStickValues extra = (CandleStickValues) item.getExtraValue();
                     if (itemNode instanceof Candle && extra != null) {
                         Candle candle = (Candle) itemNode;
 
@@ -118,7 +114,7 @@ public class CandleChart {
                         double candleWidth = -1;
                         if (getXAxis() instanceof NumberAxis) {
                             NumberAxis xa = (NumberAxis) getXAxis();
-                            candleWidth = xa.getDisplayPosition(xa.getTickUnit()) * 0.40; // use 90% width between ticks
+                            candleWidth = xa.getDisplayPosition(xa.getTickUnit()) * 0.40;
                         }
                         candle.update(close - y, high - y, low - y, candleWidth);
 
@@ -140,76 +136,20 @@ public class CandleChart {
         protected void dataItemChanged(XYChart.Data<Number, Number> item) {}
 
         @Override 
-        protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) {
-            Node candle = createCandle(getData().indexOf(series), item, itemIndex);
-            if (shouldAnimate()) {
-                candle.setOpacity(0);
-                getPlotChildren().add(candle);
-                FadeTransition ft = new FadeTransition(Duration.millis(500), candle);
-                ft.setToValue(1);
-                ft.play();
-            } else {
-                getPlotChildren().add(candle);
-            }
-            if (series.getNode() != null) {
-                series.getNode().toFront();
-            }
-        }
+        protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) {}
 
         @Override 
-        protected void dataItemRemoved(XYChart.Data<Number, Number> item, XYChart.Series<Number, Number> series) {
-            final Node candle = item.getNode();
-            if (shouldAnimate()) {
-                FadeTransition ft = new FadeTransition(Duration.millis(500), candle);
-                ft.setToValue(0);
-                ft.setOnFinished(new EventHandler<ActionEvent>() {
+        protected void dataItemRemoved(XYChart.Data<Number, Number> item, XYChart.Series<Number, Number> series) {}
 
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        getPlotChildren().remove(candle);
-                    }
-                });
-                ft.play();
-            } else {
-                getPlotChildren().remove(candle);
-            }
-        }
+        @Override 
+        protected void seriesRemoved(XYChart.Series<Number, Number> series) {}
 
         @Override 
         protected void seriesAdded(XYChart.Series<Number, Number> series, int seriesIndex) {
             for (int j = 0; j < series.getData().size(); j++) {
                 XYChart.Data item = series.getData().get(j);
                 Node candle = createCandle(seriesIndex, item, j);
-                if (shouldAnimate()) {
-                    candle.setOpacity(0);
-                    getPlotChildren().add(candle);
-                    FadeTransition ft = new FadeTransition(Duration.millis(500), candle);
-                    ft.setToValue(1);
-                    ft.play();
-                } else {
-                    getPlotChildren().add(candle);
-                }
-            }
-        }
-
-        @Override 
-        protected void seriesRemoved(XYChart.Series<Number, Number> series) {
-            for (XYChart.Data<Number, Number> d : series.getData()) {
-                final Node candle = d.getNode();
-                if (shouldAnimate()) {
-                    FadeTransition ft = new FadeTransition(Duration.millis(500), candle);
-                    ft.setToValue(0);
-                    ft.setOnFinished(new EventHandler<ActionEvent>() {
-
-                        @Override
-                        public void handle(ActionEvent actionEvent) {
-                            getPlotChildren().remove(candle);
-                        }
-                    });
-                    ft.play();
-                } else {
-                    getPlotChildren().remove(candle);
-                }
+                getPlotChildren().add(candle);
             }
         }
 
@@ -249,7 +189,7 @@ public class CandleChart {
                             xData.add(data.getXValue());
                         }
                         if (yData != null) {
-                            CandleStickExtraValues extras = (CandleStickExtraValues) data.getExtraValue();
+                            CandleStickValues extras = (CandleStickValues) data.getExtraValue();
                             if (extras != null) {
                                 yData.add(extras.getHigh());
                                 yData.add(extras.getLow());
@@ -269,13 +209,13 @@ public class CandleChart {
         }
     }
 
-    private class CandleStickExtraValues {
+    private class CandleStickValues {
         private double close;
         private double high;
         private double low;
         private double average;
 
-        public CandleStickExtraValues(double close, double high, double low, double average) {
+        public CandleStickValues(double close, double high, double low, double average) {
             this.close = close;
             this.high = high;
             this.low = low;
