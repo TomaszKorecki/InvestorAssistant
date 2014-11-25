@@ -13,7 +13,6 @@ import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
@@ -25,6 +24,7 @@ import investor.data.Index;
 /**
  *
  * @author Michal
+ * klasa służąca do tworzenia wykresu świeczkowego
  */
 public class CandleChart {
     
@@ -305,7 +305,6 @@ public class CandleChart {
         private String seriesStyleClass;
         private String dataStyleClass;
         private boolean openAboveClose = true;
-        private Tooltip tooltip = new Tooltip();
 
         private Candle(String seriesStyleClass, String dataStyleClass) {
             setAutoSizeChildren(false);
