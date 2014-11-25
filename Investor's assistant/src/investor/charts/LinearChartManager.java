@@ -172,6 +172,8 @@ public class LinearChartManager {
     public static void addSeries(LineChart<String, Number> lineChart, Index[] data, DataRange range) {
         //lineChart.getData().addAll(series);
 
+        lineChart.setAnimated((false));
+        
         String labels[] = generateXLabels(data, range);
         double values[] = new double[data.length];
         

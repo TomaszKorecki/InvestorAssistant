@@ -154,7 +154,7 @@ public abstract class InvestorView {
             flowPane.getChildren().add(button);
         }
 
-        rangeGroup.selectToggle(rangeGroup.getToggles().get(3));
+        rangeGroup.selectToggle(rangeGroup.getToggles().get(4));
 
         //Obsługa przycisków do wyboru zakresu dat
         //W klasach dziedziczących po InvestorView wywoływana jest abstrakcyjna metoda OnDataRangeChanged
